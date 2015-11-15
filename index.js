@@ -3,6 +3,8 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+app.set('port', (process.env.PORT || 5000));
+
 app.use('/bower_components', express.static('bower_components'));
 
 app.get('/', (req, res) => {
@@ -19,6 +21,6 @@ io.on('connection', socket => {
   });
 });
 
-http.listen(80, () => {
+http.listen(app.get('port'), () => {
   console.log('listening on *:80');
 });
