@@ -10,6 +10,6 @@
   function controller(socket) {
     var vm = this;
 
-
+    
   }
 })();
