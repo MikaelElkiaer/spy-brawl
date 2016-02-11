@@ -3,9 +3,9 @@
     .module('app')
     .run(run);
 
-  run.$inject = ['socket'];
+  run.$inject = ['socketService'];
 
   function run (socket) {
-    
+
   }
 })();

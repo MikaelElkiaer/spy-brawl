@@ -13,7 +13,8 @@
     $stateProvider
       .state('home', {
         url: '/',
-        templateUrl: '/public/views/home.view.html'
+        templateUrl: '/public/views/home.view.html',
+        controller: 'socketController as socket'
       });
-  }  
+  }
 })();

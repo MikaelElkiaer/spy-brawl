@@ -3,7 +3,7 @@
 
   angular
     .module('app')
-    .factory('socket', factory);
+    .factory('socketService', factory);
 
   factory.$inject = ['$rootScope'];
 
