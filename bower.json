@@ -2,6 +2,8 @@
   "name": "spyfall-mobile",
   "dependencies": {
     "angular": "~1.4.7",
-    "angular-ui-router": "~0.2.15"
+    "angular-ui-router": "~0.2.15",
+    "bootstrap": "^3.3.6",
+    "font-awesome": "fontawesome#^4.5.0"
   }
 }
