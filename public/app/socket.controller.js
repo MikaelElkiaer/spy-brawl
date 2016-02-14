@@ -6,4 +6,6 @@ class SocketController {
 
 }
 
+SocketController.$inject = ['socketService']
+
 export { SocketController }

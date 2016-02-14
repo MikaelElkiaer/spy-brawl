@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app="app">
+<html>
   <head>
     <title>Spyfall Mobile</title>
     <link rel="stylesheet" href="/public/bower_components/bootstrap/dist/css/bootstrap.css" />
@@ -10,11 +10,10 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="/public/bower_components/angular/angular.js"></script>
     <script src="/public/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-
-    <script src="/public/app/app.module.js"></script>
-    <script src="/public/app/app.route.js"></script>
-    <script src="/public/app/app.run.js"></script>
-    <script src="/public/app/socket.factory.js"></script>
-    <script src="/public/app/socket.controller.js"></script>
+    <script src="https://google.github.io/traceur-compiler/bin/traceur.js"></script>
+    <script src="https://google.github.io/traceur-compiler/bin/BrowserSystem.js"></script>
+    <script src="https://google.github.io/traceur-compiler/src/bootstrap.js"></script>
+    
+    <script type="module" src="/public/app/bootstrap.js"></script>
   </body>
 </html>
