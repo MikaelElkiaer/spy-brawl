@@ -1,15 +1,11 @@
-(function () {
-  'use strict';
+class SocketController {
 
-  angular
-    .module('app')
-    .controller('socketController', controller);
-
-  controller.$inject = ['socketService'];
-
-  function controller(socket) {
-    var vm = this;
-
-    
+  constructor(socketService) {
+    this.socketService = socketService;
   }
-})();
+
+}
+
+SocketController.$inject = ['socketService']
+
+export { SocketController }
