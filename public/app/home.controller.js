@@ -7,7 +7,7 @@ class HomeController {
 
   _setup() {
     this.$rootScope.$on('welcome', (event, args) => {
-      console.log(args);
+      this.rooms = args.rooms;
     });
   }
 }

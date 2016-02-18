@@ -6,7 +6,12 @@
           <h1 class="panel-title">Join Room</h1>
         </div>
         <div class="panel-body">
-          
+          <ul class="list-group">
+            <li class="list-group-item"
+                ng-repeat="r in home.rooms">
+              {{r}}
+            </li>
+          </ul>
         </div>
       </div>
     </div>
