@@ -11,12 +11,17 @@ app.get('/', (req, res) => {
   res.sendFile(`${__dirname}/public/index.html`);
 });
 
+var rooms = ['Room 1', 'Room 2', 'Room 3'];
+var users = {};
+
 io.on('connection', socket => {
   socket.clientIp = socket.request.connection.remoteAddress;
 
+  users[socket.id] = null;
   console.log(`connected: ${socket.id}`);
 
   socket.on('disconnect', () => {
+    delete users[socket.id];
     console.log(`disconnected: ${socket.id}`);
   });
 });
