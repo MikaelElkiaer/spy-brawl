@@ -6,8 +6,9 @@ class HomeController {
   }
 
   _setup() {
-    this.$rootScope.$on('welcome', (event, args) => {
-      this.rooms = args.rooms;
+    this.$rootScope.$on('welcome', (event, data) => {
+      this.users = data.users;
+      this.rooms = data.rooms;
     });
   }
 }
