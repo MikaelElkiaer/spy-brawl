@@ -1,12 +1,10 @@
 import { SocketService } from './socket.service.js';
-import { SocketController } from './socket.controller.js';
 
 var app = angular
   .module('app', [
     'ui.router'
   ])
   .service('socketService', SocketService)
-  .controller('socketController', SocketController)
   .config(config)
   .run(run);
 

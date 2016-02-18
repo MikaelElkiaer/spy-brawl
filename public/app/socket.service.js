@@ -1,10 +1,12 @@
 class SocketService {
   constructor($rootScope) {
       this.$rootScope = $rootScope;
-      this.socket = io.connect();
+      this.socket = io.connect({ query: 'userId=x'});
+
+      this._setup();
   }
 
-  emit(eventName, data, callback) {
+  _emit(eventName, data, callback) {
     var self = this;
     this.socket.emit(eventName, data, function () {
       var args = arguments;
@@ -16,13 +18,19 @@ class SocketService {
     })
   }
 
-  on(eventName, callback) {
+  _on(eventName, callback) {
     var self = this;
     this.socket.on(eventName, function () {
       var args = arguments;
       self.$rootScope.$apply(function () {
         callback.apply(self.socket, args);
       });
+    });
+  }
+
+  _setup() {
+    this._on('welcome', data => {
+      console.log(data);
     });
   }
 

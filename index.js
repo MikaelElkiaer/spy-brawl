@@ -17,8 +17,13 @@ var users = {};
 io.on('connection', socket => {
   socket.clientIp = socket.request.connection.remoteAddress;
 
-  users[socket.id] = null;
-  console.log(`connected: ${socket.id}`);
+  users[socket.id] = socket.handshake.query.userId;
+  console.log(`connected: ${socket.id} (AKA '${users[socket.id]}')`);
+
+  socket.emit('welcome', {
+    users: Object.keys(users).map(x => users[x]),
+    rooms
+  });
 
   socket.on('disconnect', () => {
     delete users[socket.id];
