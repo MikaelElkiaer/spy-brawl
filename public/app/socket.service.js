@@ -5,21 +5,23 @@ class SocketService {
   }
 
   emit(eventName, data, callback) {
+    var self = this;
     this.socket.emit(eventName, data, function () {
       var args = arguments;
-      this.$rootScope.$apply(function () {
+      self.$rootScope.$apply(function () {
         if (callback) {
-          callback.apply(socket, args);
+          callback.apply(self.socket, args);
         }
       });
     })
   }
 
   on(eventName, callback) {
+    var self = this;
     this.socket.on(eventName, function () {
       var args = arguments;
-      this.$rootScope.$apply(function () {
-        callback.apply(socket, args);
+      self.$rootScope.$apply(function () {
+        callback.apply(self.socket, args);
       });
     });
   }
