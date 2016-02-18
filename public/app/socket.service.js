@@ -1,12 +1,10 @@
 class SocketService {
   constructor($rootScope) {
       this.$rootScope = $rootScope;
-      this.socket = io.connect({ query: 'userId=x'});
-
-      this._setup();
+      this.socket = io.connect({ query: `userId=${Math.ceil(Math.random() * 1000)}`});
   }
 
-  _emit(eventName, data, callback) {
+  emit(eventName, data, callback) {
     var self = this;
     this.socket.emit(eventName, data, function () {
       var args = arguments;
@@ -18,19 +16,13 @@ class SocketService {
     })
   }
 
-  _on(eventName, callback) {
+  on(eventName, callback) {
     var self = this;
     this.socket.on(eventName, function () {
       var args = arguments;
       self.$rootScope.$apply(function () {
         callback.apply(self.socket, args);
       });
-    });
-  }
-
-  _setup() {
-    this._on('welcome', data => {
-      this.$rootScope.$emit('welcome', data);
     });
   }
 

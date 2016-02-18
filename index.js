@@ -20,12 +20,20 @@ io.on('connection', socket => {
   users[socket.id] = socket.handshake.query.userId;
   console.log(`connected: ${socket.id} (AKA '${users[socket.id]}')`);
 
+  socket.broadcast.emit('user:connect', {
+    user: users[socket.id]
+  });
+
   socket.emit('welcome', {
     users: Object.keys(users).map(x => users[x]),
     rooms
   });
 
   socket.on('disconnect', () => {
+    socket.broadcast.emit('user:disconnect', {
+        user: users[socket.id]
+    });
+
     delete users[socket.id];
     console.log(`disconnected: ${socket.id}`);
   });
