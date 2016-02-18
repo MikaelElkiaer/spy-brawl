@@ -1,10 +1,12 @@
 import { SocketService } from './socket.service.js';
+import { HomeController } from './home.controller.js';
 
 var app = angular
   .module('app', [
     'ui.router'
   ])
   .service('socketService', SocketService)
+  .controller('homeController', HomeController)
   .config(config)
   .run(run);
 
@@ -15,7 +17,8 @@ var app = angular
     $stateProvider
       .state('home', {
         url: '/',
-        templateUrl: '/public/views/home.view.html'
+        templateUrl: '/public/views/home.view.html',
+        controller: 'homeController as home'
       });
   }
 

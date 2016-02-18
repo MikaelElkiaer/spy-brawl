@@ -30,7 +30,7 @@ class SocketService {
 
   _setup() {
     this._on('welcome', data => {
-      console.log(data);
+      this.$rootScope.$emit('welcome', data);
     });
   }
 
