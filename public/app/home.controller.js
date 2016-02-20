@@ -5,6 +5,10 @@ class HomeController {
     this._setup();
   }
 
+  createRoom() {
+    console.log('Creating new room...');
+  }
+
   joinRoom(roomId) {
     console.log(`Joining room: ${roomId}...`);
   }
