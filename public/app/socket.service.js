@@ -1,25 +1,25 @@
 class SocketService {
   constructor($rootScope) {
       this.$rootScope = $rootScope;
-      this.socket = io.connect();
+      this.socket = io.connect({ query: `userId=${Math.ceil(Math.random() * 1000)}`});
   }
 
   emit(eventName, data, callback) {
-    this.socket.emit(eventName, data, function () {
-      var args = arguments;
-      this.$rootScope.$apply(function () {
+    this.socket.emit(eventName, data, (...args) => {
+      var cArgs = args;
+      this.$rootScope.$apply(() => {
         if (callback) {
-          callback.apply(socket, args);
+          callback.apply(this.socket, cArgs);
         }
       });
     })
   }
 
   on(eventName, callback) {
-    this.socket.on(eventName, function () {
-      var args = arguments;
-      this.$rootScope.$apply(function () {
-        callback.apply(socket, args);
+    this.socket.on(eventName, (...args) => {
+      var cArgs = args;
+      this.$rootScope.$apply(() => {
+        callback.apply(this.socket, cArgs);
       });
     });
   }

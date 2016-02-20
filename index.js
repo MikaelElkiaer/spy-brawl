@@ -11,12 +11,42 @@ app.get('/', (req, res) => {
   res.sendFile(`${__dirname}/public/index.html`);
 });
 
+var rooms = ['Room 1', 'Room 2', 'Room 3'];
+var users = {};
+
 io.on('connection', socket => {
   socket.clientIp = socket.request.connection.remoteAddress;
 
-  console.log(`connected: ${socket.id}`);
+  users[socket.id] = socket.handshake.query.userId;
+  console.log(`connected: ${socket.id} (AKA '${users[socket.id]}')`);
+
+  socket.broadcast.emit('user:connect', {
+    user: users[socket.id]
+  });
+
+  socket.emit('welcome', {
+    users: Object.keys(users).map(x => users[x]),
+    rooms
+  });
+
+  socket.on('join', (data, callback) => {
+    socket.join(data.roomId);
+
+    io.in(data.roomId).clients((error, clients) => {
+      callback({ users: clients.map(c => users[c]) });
+    });
+
+    socket.broadcast.to(data.roomId).emit('user:join', {
+      user: users[socket.id]
+    });
+  });
 
   socket.on('disconnect', () => {
+    socket.broadcast.emit('user:disconnect', {
+        user: users[socket.id]
+    });
+
+    delete users[socket.id];
     console.log(`disconnected: ${socket.id}`);
   });
 });

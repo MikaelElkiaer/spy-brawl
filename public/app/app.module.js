@@ -1,12 +1,14 @@
 import { SocketService } from './socket.service.js';
-import { SocketController } from './socket.controller.js';
+import { HomeController } from './home.controller.js';
+import { RoomController } from './room.controller.js';
 
 var app = angular
   .module('app', [
     'ui.router'
   ])
   .service('socketService', SocketService)
-  .controller('socketController', SocketController)
+  .controller('homeController', HomeController)
+  .controller('roomController', RoomController)
   .config(config)
   .run(run);
 
@@ -17,7 +19,14 @@ var app = angular
     $stateProvider
       .state('home', {
         url: '/',
-        templateUrl: '/public/views/home.view.html'
+        templateUrl: '/public/views/home.view.html',
+        controller: 'homeController as home'
+      })
+
+      .state('room', {
+        url: '/room/:roomId',
+        templateUrl: '/public/views/room.view.html',
+        controller: 'roomController as room'
       });
   }
 
