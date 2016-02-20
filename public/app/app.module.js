@@ -1,5 +1,6 @@
 import { SocketService } from './socket.service.js';
 import { HomeController } from './home.controller.js';
+import { RoomController } from './room.controller.js';
 
 var app = angular
   .module('app', [
@@ -7,6 +8,7 @@ var app = angular
   ])
   .service('socketService', SocketService)
   .controller('homeController', HomeController)
+  .controller('roomController', RoomController)
   .config(config)
   .run(run);
 
@@ -19,6 +21,12 @@ var app = angular
         url: '/',
         templateUrl: '/public/views/home.view.html',
         controller: 'homeController as home'
+      })
+
+      .state('room', {
+        url: '/room/:roomId',
+        templateUrl: '/public/views/room.view.html',
+        controller: 'roomController as room'
       });
   }
 

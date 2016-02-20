@@ -1,16 +1,17 @@
 class HomeController {
-  constructor(socketService) {
+  constructor($state, socketService) {
+    this.$state = $state;
     this.socket = socketService;
 
     this._setup();
   }
 
   createRoom() {
-    console.log('Creating new room...');
+
   }
 
   joinRoom(roomId) {
-    console.log(`Joining room: ${roomId}...`);
+    this.$state.go('room', { roomId });
   }
 
   _setup() {
@@ -29,6 +30,6 @@ class HomeController {
   }
 }
 
-HomeController.$inject = ['socketService'];
+HomeController.$inject = ['$state', 'socketService'];
 
 export { HomeController }
