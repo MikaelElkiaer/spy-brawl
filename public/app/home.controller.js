@@ -1,6 +1,6 @@
 class HomeController {
   constructor(socketService) {
-    this.io = socketService;
+    this.socket = socketService;
 
     this._setup();
   }
@@ -14,19 +14,17 @@ class HomeController {
   }
 
   _setup() {
-    var self = this;
-
-    this.io.on('welcome', data => {
-      self.users = data.users;
-      self.rooms = data.rooms;
+    this.socket.on('welcome', data => {
+      this.users = data.users;
+      this.rooms = data.rooms;
     });
 
-    this.io.on('user:connect', data => {
-      self.users.push(data.user);
+    this.socket.on('user:connect', data => {
+      this.users.push(data.user);
     });
 
-    this.io.on('user:disconnect', data => {
-      self.users.splice(self.users.indexOf(data.user));
+    this.socket.on('user:disconnect', data => {
+      this.users.splice(this.users.indexOf(data.user));
     });
   }
 }
