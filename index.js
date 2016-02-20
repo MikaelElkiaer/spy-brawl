@@ -31,8 +31,13 @@ io.on('connection', socket => {
 
   socket.on('join', (data, callback) => {
     socket.join(data.roomId);
+
     io.in(data.roomId).clients((error, clients) => {
       callback({ users: clients.map(c => users[c]) });
+    });
+
+    socket.broadcast.to(data.roomId).emit('user:join', {
+      user: users[socket.id]
     });
   });
 

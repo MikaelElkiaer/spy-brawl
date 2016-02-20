@@ -9,6 +9,14 @@ class RoomController {
     this.socket.emit('join', { roomId }, data => {
       this.users = data.users;
     });
+
+    this.socket.on('user:join', data => {
+      this.users.push(data.user);
+    });
+
+    this.socket.on('user:disconnect', data => {
+      this.users.splice(this.users.indexOf(data.user));
+    });
   }
 }
 
