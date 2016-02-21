@@ -1,0 +1,18 @@
+.container-fluid
+    .row
+        .col-sm-6
+            .panel.panel-default
+                .panel-heading
+                    h1.panel-title Active Users
+                .panel-body
+                    .list-group
+                        .list-group-item(ng-repeat='u in home.users') {{u}}
+        .col-sm-6
+            .panel.panel-default
+                .panel-heading.clearfix
+                    h1.panel-title.pull-left Rooms
+                    button.btn.btn-xs.btn-default.pull-right(ng-click='home.createRoom()')
+                        i.fa.fa-plus &nbsp; New
+                .panel-body
+                    .list-group
+                        a.list-group-item(href, ng-click='home.joinRoom(r)', ng-repeat='r in home.rooms') {{r}}

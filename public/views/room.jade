@@ -1,0 +1,16 @@
+.container-fluid
+    .row
+        .col-sm-6
+            .panel.panel-default
+                .panel-heading
+                    h3.panel-title Users in room
+                .panel-body
+                    ul.list-group
+                        li.list-group-item(ng-repeat='u in room.users') {{u}}
+        .col-sm-6
+            .panel.panel-default
+                .panel-heading
+                    h3.panel-title Chat
+                .panel-body
+                    input.form-control(type='text', name='chat', placeholder='Send a chat message...', ng-model='room.chatMsg', ng-keypress='($event.which === 13) ? room.sendMessage() : false')
+                    #chatLog(style='padding: 10px; height: 400px; overflow-y: scroll;')

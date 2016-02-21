@@ -11,6 +11,10 @@ app.get('/', (req, res) => {
   res.render(`${__dirname}/public/index`);
 });
 
+app.get('/views/:name', (req, res) => {
+  res.render(`${__dirname}/public/views/${req.params.name}`);
+});
+
 var rooms = ['Room 1', 'Room 2', 'Room 3'];
 var users = {};
 
