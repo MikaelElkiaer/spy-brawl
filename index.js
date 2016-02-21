@@ -47,6 +47,11 @@ io.on('connection', socket => {
     });
   });
 
+  socket.on('msg', (data, callback) => {
+    io.in(data.roomId).emit('user:msg', { chatMsg: data.chatMsg });
+    callback();
+  });
+
   socket.on('disconnect', () => {
     socket.broadcast.emit('user:disconnect', {
         user: users[socket.id]

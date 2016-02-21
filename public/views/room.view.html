@@ -21,7 +21,10 @@
           <h3 class="panel-title">Chat</h3>
         </div>
         <div class="panel-body">
-
+          <input class="form-control" type="text" name="chat" placeholder="Send a chat message..."
+              ng-model="room.chatMsg"
+              ng-keypress="($event.which === 13) ? room.sendMessage() : false" />
+          <div id="chatLog" style="padding: 10px; height: 400px; overflow-y: scroll;"></div>
         </div>
       </div>
     </div>
