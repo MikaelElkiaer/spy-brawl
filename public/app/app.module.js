@@ -19,13 +19,13 @@ var app = angular
     $stateProvider
       .state('home', {
         url: '/',
-        templateUrl: '/public/views/home.view.html',
+        templateUrl: '/views/home',
         controller: 'homeController as home'
       })
 
       .state('room', {
         url: '/room/:roomId',
-        templateUrl: '/public/views/room.view.html',
+        templateUrl: '/views/room',
         controller: 'roomController as room'
       });
   }

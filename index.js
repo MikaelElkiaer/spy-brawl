@@ -4,11 +4,15 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 app.set('port', (process.env.PORT || 5000));
-
+app.set('view engine', 'jade');
 app.use('/public', express.static('public'));
 
 app.get('/', (req, res) => {
-  res.sendFile(`${__dirname}/public/index.html`);
+  res.render(`${__dirname}/public/index`);
+});
+
+app.get('/views/:name', (req, res) => {
+  res.render(`${__dirname}/public/views/${req.params.name}`);
 });
 
 var rooms = ['Room 1', 'Room 2', 'Room 3'];

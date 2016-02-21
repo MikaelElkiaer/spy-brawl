@@ -1,0 +1,27 @@
+doctype html
+html
+    head
+        title Spyfall Mobile
+        link(rel='stylesheet', href='/public/bower_components/bootstrap/dist/css/bootstrap.css')
+        link(rel='stylesheet', href='/public/bower_components/font-awesome/css/font-awesome.css')
+    body
+        nav.navbar.navbar-default
+            .container-fluid
+            .navbar-header
+                button.navbar-toggle(type='button', ng-init='isCollapsed = true', ng-click='isCollapsed = !isCollapsed')
+                    span.sr-only Toggle navigation
+                    span.icon-bar
+                    span.icon-bar
+                    span.icon-bar              
+                a.navbar-brand Spyfall
+            .navbar-collapse(ng-class: {collapse: isCollapsed})
+                ul.nav.navbar-nav
+        div(ui-view)
+        script(src='/socket.io/socket.io.js')
+        script(src='/public/bower_components/angular/angular.js')
+        script(src='/public/bower_components/angular-ui-router/release/angular-ui-router.js')
+        script(src='https://google.github.io/traceur-compiler/bin/traceur.js')
+        script(src='https://google.github.io/traceur-compiler/bin/BrowserSystem.js')
+        script(src='https://google.github.io/traceur-compiler/src/bootstrap.js')
+
+        script(type='module', src='/public/app/bootstrap.js')
