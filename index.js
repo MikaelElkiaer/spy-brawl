@@ -14,6 +14,10 @@ app.get('/', (req, res) => {
 var rooms = ['Room 1', 'Room 2', 'Room 3'];
 var users = {};
 
+io.use((socket, next) => {
+  next();
+});
+
 io.on('connection', socket => {
   socket.clientIp = socket.request.connection.remoteAddress;
 
