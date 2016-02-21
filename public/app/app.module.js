@@ -32,7 +32,7 @@ var app = angular
 
   run.$inject = ['socketService'];
   function run (socket) {
-
+    socket.connect(Math.ceil(Math.random() * 1000));
   }
 
 export default 'app';

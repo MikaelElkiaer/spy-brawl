@@ -1,7 +1,10 @@
 class SocketService {
   constructor($rootScope) {
       this.$rootScope = $rootScope;
-      this.socket = io.connect({ query: `userId=${Math.ceil(Math.random() * 1000)}`});
+  }
+
+  connect(userSid) {
+    this.socket = io.connect({ query: `userSid=${userSid}` });
   }
 
   emit(eventName, data, callback) {

@@ -21,7 +21,7 @@ io.use((socket, next) => {
 io.on('connection', socket => {
   socket.clientIp = socket.request.connection.remoteAddress;
 
-  users[socket.id] = socket.handshake.query.userId;
+  users[socket.id] = socket.handshake.query.userSid;
   console.log(`connected: ${socket.id} (AKA '${users[socket.id]}')`);
 
   socket.broadcast.emit('user:connect', {
