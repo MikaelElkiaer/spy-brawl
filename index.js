@@ -28,9 +28,11 @@ io.on('connection', socket => {
     user: users[socket.id]
   });
 
-  socket.emit('welcome', {
-    users: Object.keys(users).map(x => users[x]),
-    rooms
+  socket.on('conn', (data, callback) => {
+    callback({
+      users: Object.keys(users).map(x => users[x]),
+      rooms
+    });
   });
 
   socket.on('join', (data, callback) => {

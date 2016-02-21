@@ -15,9 +15,9 @@ class HomeController {
   }
 
   _setup() {
-    this.socket.on('welcome', data => {
-      this.users = data.users;
+    this.socket.emit('conn', null, data => {
       this.rooms = data.rooms;
+      this.users = data.users;
     });
 
     this.socket.on('user:connect', data => {
