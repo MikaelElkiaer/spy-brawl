@@ -1,3 +1,5 @@
+import { routeConfig } from './app.route.js';
+import { run } from './app.run.js';
 import { SocketService } from './socket.service.js';
 import { HomeController } from './home.controller.js';
 import { RoomController } from './room.controller.js';
@@ -9,30 +11,7 @@ var app = angular
   .service('socketService', SocketService)
   .controller('homeController', HomeController)
   .controller('roomController', RoomController)
-  .config(config)
+  .config(routeConfig)
   .run(run);
-
-  config.$inject = ['$stateProvider', '$urlRouterProvider'];
-  function config($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/');
-
-    $stateProvider
-      .state('home', {
-        url: '/',
-        templateUrl: '/views/home',
-        controller: 'homeController as home'
-      })
-
-      .state('room', {
-        url: '/room/:roomId',
-        templateUrl: '/views/room',
-        controller: 'roomController as room'
-      });
-  }
-
-  run.$inject = ['socketService'];
-  function run (socket) {
-    socket.connect(Math.ceil(Math.random() * 1000));
-  }
 
 export default 'app';
