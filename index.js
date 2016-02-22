@@ -24,7 +24,7 @@ io.use((socket, next) => {
   var userSid = socket.handshake.query.userSid;
 
   if (!userSid) {
-    var username = socket.handshake.query.userSid;
+    var username = socket.handshake.query.username;
     if (username) {
       var hash = crypto.createHash('md5').update(new Date().toString());
       usernames[hash] = username;
@@ -32,8 +32,10 @@ io.use((socket, next) => {
     else
       next(new Error({ code: 1 }));
   }
-
-  next();
+  else if (!usernames[userSid])
+    next(new Error({ code: 2 }));
+  else
+    next();
 });
 
 io.on('connection', socket => {
