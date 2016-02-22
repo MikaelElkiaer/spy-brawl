@@ -9,15 +9,6 @@ class SocketService {
 
     this.on('error', error => {
       var error = JSON.parse(error);
-      switch (error.code) {
-        case 1:
-        case 2:
-          this.$state.go('newUsername', { errorCode: error.code, callbackState: this.$state.$current.self.name });
-          break;
-        default:
-          console.log('unhandled error...');
-          break;
-      }
     });
   }
 

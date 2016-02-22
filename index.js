@@ -17,41 +17,36 @@ app.get('/views/:name', (req, res) => {
 });
 
 var rooms = ['Room 1', 'Room 2', 'Room 3'];
+var nextUsername = 1;
 var users = {};
-var usernames = {};
 
 io.use((socket, next) => {
   var userSid = socket.handshake.query.userSid;
 
-  if (!userSid) {
-    var username = socket.handshake.query.username;
-    if (username) {
-      var hash = crypto.createHash('md5').update(new Date().toString());
-      usernames[hash] = username;
-    }
-    else
-      next(new Error('{ "code": 1 }')); //no userSid or username provided
+  if (!userSid || !findUserBySid(userSid)) {
+    var newUser = {
+      userSid: crypto.createHash('md5').update(new Date().toString()),
+      username: getNextUsername()
+    };
+    users[socket.id] = newUser;
   }
-  else if (!usernames[userSid])
-    next(new Error('{ "code": 2 }')); //userSid does not exist
-  else
-    next();
+  next();
 });
 
 io.on('connection', socket => {
   socket.clientIp = socket.request.connection.remoteAddress;
 
-  users[socket.id] = usernames[socket.handshake.query.userSid];
-  console.log(`connected: ${socket.id} (AKA '${users[socket.id]}')`);
+  console.log(`connected: ${socket.id} (AKA '${users[socket.id].username}')`);
 
   socket.broadcast.emit('user:connect', {
-    user: users[socket.id]
+    user: users[socket.id].username
   });
 
   socket.on('conn', (data, callback) => {
     callback({
-      username: users[socket.id],
-      users: Object.keys(users).map(x => users[x]),
+      userSid: users[socket.id].userSid,
+      username: users[socket.id].username,
+      users: Object.keys(users).map(x => users[x].username),
       rooms
     });
   });
@@ -60,11 +55,11 @@ io.on('connection', socket => {
     socket.join(data.roomId);
 
     io.in(data.roomId).clients((error, clients) => {
-      callback({ users: clients.map(c => users[c]) });
+      callback({ users: clients.map(c => users[c].username) });
     });
 
     socket.broadcast.to(data.roomId).emit('user:join', {
-      user: users[socket.id]
+      user: users[socket.id].username
     });
   });
 
@@ -75,7 +70,7 @@ io.on('connection', socket => {
 
   socket.on('disconnect', () => {
     socket.broadcast.emit('user:disconnect', {
-        user: users[socket.id]
+        user: users[socket.id].username
     });
 
     delete users[socket.id];
@@ -86,3 +81,15 @@ io.on('connection', socket => {
 http.listen(app.get('port'), () => {
   console.log(`listening on *:${app.get('port')}`);
 });
+
+function findUserBySid(userSid) {
+  for (var id in users) {
+    if (users[id].userSid === userSid)
+      return users[id];
+  }
+  return null;
+}
+
+function getNextUsername() {
+  return 'Guest ' + nextUsername % 100;
+}
