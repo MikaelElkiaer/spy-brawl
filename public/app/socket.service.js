@@ -9,13 +9,10 @@ class SocketService {
 
     this.on('error', error => {
       var error = JSON.parse(error);
-      console.log(error);
       switch (error.code) {
         case 1:
-          console.log('no userSid or username, redirect to new user view...');
-          break;
         case 2:
-          console.log('userSid is dead, drop it and redirect to new user view...');
+          this.$state.go('newUsername', { errorCode: error.code, callbackState: this.$state.$current.self.name });
           break;
         default:
           console.log('unhandled error...');
