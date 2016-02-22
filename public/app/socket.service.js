@@ -7,7 +7,19 @@ class SocketService {
     this.socket = io.connect({ query: `userSid=${userSid}` });
 
     this.on('error', error => {
+      var error = JSON.parse(error);
       console.log(error);
+      switch (error.code) {
+        case 1:
+          console.log('no userSid or username, redirect to new user view...');
+          break;
+        case 2:
+          console.log('userSid is dead, drop it and redirect to new user view...');
+          break;
+        default:
+          console.log('unhandled error...');
+          break;
+      }
     });
   }
 

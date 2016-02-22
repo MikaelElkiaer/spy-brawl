@@ -30,10 +30,10 @@ io.use((socket, next) => {
       usernames[hash] = username;
     }
     else
-      next(new Error({ code: 1 }));
+      next(new Error('{ "code": 1 }')); //no userSid or username provided
   }
   else if (!usernames[userSid])
-    next(new Error({ code: 2 }));
+    next(new Error('{ "code": 2 }')); //userSid does not exist
   else
     next();
 });
