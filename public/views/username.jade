@@ -1,0 +1,12 @@
+.container-fluid
+    .row
+        .col-sm-6.col-sm-offset-3
+            .panel.panel-default
+                .panel-heading
+                    h3.panel-title New username
+                .panel-body
+                    form(novalidate, name='usernameForm' ng-submit='usernameForm.$valid && newUsername.submit()')
+                        .form-group
+                            input.form-control(type='text', name='username', placeholder='Enter a new username', required
+                                ng-model='newUsername.username')
+                        button.btn.btn-default.pull-right(type='submit') Submit

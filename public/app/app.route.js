@@ -12,6 +12,12 @@ function routeConfig($stateProvider, $urlRouterProvider) {
       url: '/room/:roomId',
       templateUrl: '/views/room',
       controller: 'roomController as room'
+    })
+
+    .state('username', {
+      url: '/username',
+      templateUrl: '/views/username',
+      controller: 'newUsernameController as newUsername'
     });
 }
 

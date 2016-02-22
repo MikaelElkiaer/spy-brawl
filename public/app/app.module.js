@@ -5,6 +5,7 @@ import { SocketService } from './socket.service.js';
 import { UserService } from './user.service.js';
 import { HomeController } from './home.controller.js';
 import { RoomController } from './room.controller.js';
+import { NewUsernameController } from './newUsername.controller.js';
 
 var app = angular
   .module('app', [
@@ -15,6 +16,7 @@ var app = angular
   .service('userService', UserService)
   .controller('homeController', HomeController)
   .controller('roomController', RoomController)
+  .controller('newUsernameController', NewUsernameController)
   .config(config)
   .config(routeConfig)
   .run(run);
