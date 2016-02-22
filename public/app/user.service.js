@@ -1,9 +1,9 @@
 class UserService {
-  constructor() {
-
+  constructor(localStorageService) {
+    this.storage = localStorageService;
   }
 }
 
-UserService.$inject = [];
+UserService.$inject = ['localStorageService'];
 
 export { UserService }
