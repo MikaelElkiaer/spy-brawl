@@ -1,7 +1,8 @@
-function run (socket) {
-  socket.connect(Math.ceil(Math.random() * 1000));
+function run (socket, userService) {
+  console.log(`current user: ${userService.userSid}`);
+  socket.connect(userService.userSid);
 }
 
-run.$inject = ['socketService'];
+run.$inject = ['socketService', 'userService'];
 
 export { run }
