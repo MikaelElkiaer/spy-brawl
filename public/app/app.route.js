@@ -14,7 +14,7 @@ function routeConfig($stateProvider, $urlRouterProvider) {
       controller: 'roomController as room'
     })
 
-    .state('username', {
+    .state('newUsername', {
       url: '/username',
       templateUrl: '/views/username',
       controller: 'newUsernameController as newUsername'

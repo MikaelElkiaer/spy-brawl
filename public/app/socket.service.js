@@ -1,6 +1,7 @@
 class SocketService {
-  constructor($rootScope) {
+  constructor($rootScope, $state) {
       this.$rootScope = $rootScope;
+      this.$state = $state;
   }
 
   connect(userSid) {
@@ -45,6 +46,6 @@ class SocketService {
 
 }
 
-SocketService.$inject = ['$rootScope']
+SocketService.$inject = ['$rootScope', '$state']
 
 export { SocketService }
