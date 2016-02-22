@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var crypto = require('crypto');
 
 app.set('port', (process.env.PORT || 5000));
 app.set('view engine', 'jade');
@@ -17,16 +18,28 @@ app.get('/views/:name', (req, res) => {
 
 var rooms = ['Room 1', 'Room 2', 'Room 3'];
 var users = {};
+var usernames = {};
 
 io.use((socket, next) => {
   var userSid = socket.handshake.query.userSid;
+
+  if (!userSid) {
+    var username = socket.handshake.query.userSid;
+    if (username) {
+      var hash = crypto.createHash('md5').update(new Date().toString());
+      usernames[hash] = username;
+    }
+    else
+      next(new Error({ code: 1 }));
+  }
+
   next();
 });
 
 io.on('connection', socket => {
   socket.clientIp = socket.request.connection.remoteAddress;
 
-  users[socket.id] = socket.handshake.query.userSid;
+  users[socket.id] = usernames[socket.handshake.query.userSid];
   console.log(`connected: ${socket.id} (AKA '${users[socket.id]}')`);
 
   socket.broadcast.emit('user:connect', {
@@ -35,6 +48,7 @@ io.on('connection', socket => {
 
   socket.on('conn', (data, callback) => {
     callback({
+      username: users[socket.id],
       users: Object.keys(users).map(x => users[x]),
       rooms
     });
