@@ -19,6 +19,7 @@ var rooms = ['Room 1', 'Room 2', 'Room 3'];
 var users = {};
 
 io.use((socket, next) => {
+  var userSid = socket.handshake.query.userSid;
   next();
 });
 

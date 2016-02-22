@@ -5,6 +5,10 @@ class SocketService {
 
   connect(userSid) {
     this.socket = io.connect({ query: `userSid=${userSid}` });
+
+    this.on('error', error => {
+      console.log(error);
+    });
   }
 
   emit(eventName, data, callback) {
