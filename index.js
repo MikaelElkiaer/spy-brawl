@@ -7,6 +7,7 @@ var crypto = require('crypto');
 app.set('port', (process.env.PORT || 5000));
 app.set('view engine', 'jade');
 app.use('/public', express.static('public'));
+app.use('/node_modules', express.static('node_modules'));
 
 app.get('/', (req, res) => {
   res.render(`${__dirname}/public/index`);

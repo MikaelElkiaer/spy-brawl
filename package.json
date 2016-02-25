@@ -6,12 +6,15 @@
   "main": "index.js",
   "version": "0.0.1",
   "scripts": {
-    "start": "gulp default",
-    "postinstall": "bower install"
+    "start": "gulp default"
   },
   "dependencies": {
-    "bower": "^1.7.7",
+    "angular": "^1.5.0",
+    "angular-local-storage": "^0.2.2",
+    "angular-ui-router": "^0.2.18",
+    "bootstrap": "^3.3.6",
     "express": "^4.13.4",
+    "font-awesome": "^4.5.0",
     "jade": "^1.11.0",
     "socket.io": "^1.4.5"
   },
