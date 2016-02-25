@@ -23,4 +23,4 @@ Please tell me oh great one, how do I, a simple dimwit, run your cool shit?
 ## Deploying to heroku
 
 * `git add remote heroku git@heroku.com:[project-name].git`
-* `git push origin`
+* `git push heroku`
