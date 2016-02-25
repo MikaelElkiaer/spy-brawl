@@ -12,5 +12,7 @@
                 .panel-heading
                     h3.panel-title Chat
                 .panel-body
-                    input.form-control(type='text', name='chat', placeholder='Send a chat message...', ng-model='room.chatMsg', ng-keypress='($event.which === 13) ? room.sendMessage() : false')
-                    #chatLog(style='padding: 10px; height: 400px; overflow-y: scroll;')
+                    input.form-control(type='text', name='chat', placeholder='Send a chat message...', required
+                        ng-model='room.chatMsg', ng-keypress='($event.which === 13 && room.chatMsg.length > 0) ? room.sendMessage() : false')
+                    div(style='padding: 10px')
+                        p(ng-repeat='msg in room.messages track by $index') {{msg}}

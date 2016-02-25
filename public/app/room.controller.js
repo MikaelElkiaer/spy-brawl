@@ -4,6 +4,7 @@ class RoomController {
     this.userService = userService;
     this.roomId = params.roomId;
 
+    this.messages = [];
     this._setup(this.roomId);
   }
 
@@ -33,7 +34,7 @@ class RoomController {
     });
 
     this.socket.on('user:msg', data => {
-      this.log.prepend(data.chatMsg + '<br/>');
+      this.messages.push(data.chatMsg);
     });
   }
 }
