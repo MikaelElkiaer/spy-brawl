@@ -1,6 +1,7 @@
 class RoomController {
-  constructor(params, socket) {
+  constructor(params, socket, userService) {
     this.socket = socket;
+    this.userService = userService;
     this.roomId = params.roomId;
 
     this._setup(this.roomId);
@@ -37,6 +38,6 @@ class RoomController {
   }
 }
 
-RoomController.$inject = ['$stateParams', 'socketService'];
+RoomController.$inject = ['$stateParams', 'socketService', 'userService'];
 
 export { RoomController }
