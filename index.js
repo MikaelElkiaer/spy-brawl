@@ -16,7 +16,7 @@ app.get('/views/:name', (req, res) => {
   res.render(`${__dirname}/public/views/${req.params.name}`);
 });
 
-var rooms = ['Room 1', 'Room 2', 'Room 3'];
+var rooms = ['room1', 'room2', 'room3'];
 var nextUsername = 1;
 var users = {};
 
