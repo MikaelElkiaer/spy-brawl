@@ -20,11 +20,11 @@ class UserService {
   }
 
   get username() {
-    return this.storage.get(this._userSidKey);
+    return this.storage.get(this._usernameKey);
   }
 
   set userSid(sid) {
-    this.storage.set(this._usernameKey, sid);
+    this.storage.set(this._userSidKey, sid);
   }
 
   set username(username) {
