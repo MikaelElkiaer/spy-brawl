@@ -1,10 +1,15 @@
 class SocketService {
-  constructor($rootScope) {
+  constructor($rootScope, $state) {
       this.$rootScope = $rootScope;
+      this.$state = $state;
   }
 
   connect(userSid) {
     this.socket = io.connect({ query: `userSid=${userSid}` });
+
+    this.on('error', error => {
+      var error = JSON.parse(error);
+    });
   }
 
   emit(eventName, data, callback) {
@@ -29,6 +34,6 @@ class SocketService {
 
 }
 
-SocketService.$inject = ['$rootScope']
+SocketService.$inject = ['$rootScope', '$state']
 
 export { SocketService }

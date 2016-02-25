@@ -6,7 +6,7 @@
                     h1.panel-title Active Users
                 .panel-body
                     .list-group
-                        .list-group-item(ng-repeat='u in home.users') {{u}}
+                        .list-group-item(ng-class='{ "active": u === home.userService.username }', ng-repeat='u in home.users') {{u}}
         .col-sm-6
             .panel.panel-default
                 .panel-heading.clearfix
@@ -15,4 +15,4 @@
                         i.fa.fa-plus &nbsp; New
                 .panel-body
                     .list-group
-                        a.list-group-item(href, ng-click='home.joinRoom(r)', ng-repeat='r in home.rooms') {{r}}
+                        a.list-group-item(ui-sref='room({ roomId: r })', ng-repeat='r in home.rooms') {{r}}

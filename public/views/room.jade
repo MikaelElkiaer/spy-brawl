@@ -6,7 +6,7 @@
                     h3.panel-title Users in room
                 .panel-body
                     ul.list-group
-                        li.list-group-item(ng-repeat='u in room.users') {{u}}
+                        li.list-group-item(ng-class='{ "active": u === home.userService.username }', ng-repeat='u in room.users') {{u}}
         .col-sm-6
             .panel.panel-default
                 .panel-heading
