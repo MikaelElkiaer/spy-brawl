@@ -22,10 +22,11 @@ var users = {};
 
 io.use((socket, next) => {
   var userSid = socket.handshake.query.userSid;
+  console.log(userSid);
 
   if (!userSid || !findUserBySid(userSid)) {
     var newUser = {
-      userSid: crypto.createHash('md5').update(new Date().toString()),
+      userSid: crypto.createHash('md5').update(new Date().toString()).digest('base64'),
       username: getNextUsername()
     };
     users[socket.id] = newUser;
