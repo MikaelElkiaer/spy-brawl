@@ -22,11 +22,10 @@ var users = {};
 
 io.use((socket, next) => {
   var userSid = socket.handshake.query.userSid;
-  console.log(userSid);
 
   if (!userSid || !findUserBySid(userSid)) {
     var newUser = {
-      userSid: crypto.createHash('md5').update(new Date().toString()).digest('base64'),
+      userSid: crypto.createHash('md5').update(new Date().toString()).digest('hex'),
       username: getNextUsername(),
       active: true
     };
@@ -44,10 +43,6 @@ io.use((socket, next) => {
 io.on('connection', socket => {
   socket.clientIp = socket.request.connection.remoteAddress;
 
-  console.log(`connected: ${socket.id} (AKA '${users[socket.id].username}')`);
-
-  console.log(users[socket.id]);
-
   socket.broadcast.emit('user:connect', {
     user: users[socket.id].username
   });
@@ -56,7 +51,7 @@ io.on('connection', socket => {
     callback({
       userSid: users[socket.id].userSid,
       username: users[socket.id].username,
-      users: Object.keys(users).map(x => users[x].username),
+      users: Object.keys(users).filter(x => users[x].active).map(x => users[x].username),
       rooms
     });
   });
@@ -84,7 +79,6 @@ io.on('connection', socket => {
     });
 
     users[socket.id].active = false;
-    console.log(`disconnected: ${socket.id}`);
   });
 });
 
@@ -93,7 +87,9 @@ http.listen(app.get('port'), () => {
 });
 
 function findUserBySid(userSid) {
-  for (var id in users) {
+  var socketIds = Object.keys(users);
+  for (var i = 0; i < socketIds.length; i++) {
+    var id = socketIds[i];
     if (users[id].userSid === userSid)
       return { userSid: id, userObj: users[id] };
   }
