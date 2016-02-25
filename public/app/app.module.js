@@ -1,10 +1,10 @@
 import { config } from './app.config.js';
 import { routeConfig } from './app.route.js';
 import { run } from './app.run.js';
-import { SocketService } from './socket.service.js';
-import { UserService } from './user.service.js';
-import { HomeController } from './home.controller.js';
-import { RoomController } from './room.controller.js';
+import { SocketService } from './services/socket.service.js';
+import { UserService } from './services/user.service.js';
+import { HomeController } from './controllers/home.controller.js';
+import { RoomController } from './controllers/room.controller.js';
 
 var app = angular
   .module('app', [
