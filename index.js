@@ -91,5 +91,5 @@ function findUserBySid(userSid) {
 }
 
 function getNextUsername() {
-  return 'Guest ' + nextUsername % 100;
+  return 'Guest ' + nextUsername++ % 100;
 }
