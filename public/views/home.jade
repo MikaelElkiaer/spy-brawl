@@ -15,4 +15,4 @@
                         i.fa.fa-plus &nbsp; New
                 .panel-body
                     .list-group
-                        a.list-group-item(href, ng-click='home.joinRoom(r)', ng-repeat='r in home.rooms') {{r}}
+                        a.list-group-item(ui-sref='room({ roomId: r })', ng-repeat='r in home.rooms') {{r}}
