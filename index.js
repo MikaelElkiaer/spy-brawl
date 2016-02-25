@@ -27,9 +27,16 @@ io.use((socket, next) => {
   if (!userSid || !findUserBySid(userSid)) {
     var newUser = {
       userSid: crypto.createHash('md5').update(new Date().toString()).digest('base64'),
-      username: getNextUsername()
+      username: getNextUsername(),
+      active: true
     };
     users[socket.id] = newUser;
+  }
+  else {
+    var oldUser = findUserBySid(userSid);
+    delete users[oldUser.userSid];
+    oldUser.userObj.active = true;
+    users[socket.id] = oldUser.userObj;
   }
   next();
 });
@@ -38,6 +45,8 @@ io.on('connection', socket => {
   socket.clientIp = socket.request.connection.remoteAddress;
 
   console.log(`connected: ${socket.id} (AKA '${users[socket.id].username}')`);
+
+  console.log(users[socket.id]);
 
   socket.broadcast.emit('user:connect', {
     user: users[socket.id].username
@@ -74,7 +83,7 @@ io.on('connection', socket => {
         user: users[socket.id].username
     });
 
-    delete users[socket.id];
+    users[socket.id].active = false;
     console.log(`disconnected: ${socket.id}`);
   });
 });
@@ -86,7 +95,7 @@ http.listen(app.get('port'), () => {
 function findUserBySid(userSid) {
   for (var id in users) {
     if (users[id].userSid === userSid)
-      return users[id];
+      return { userSid: id, userObj: users[id] };
   }
   return null;
 }
