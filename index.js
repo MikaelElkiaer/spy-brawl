@@ -17,7 +17,8 @@ app.get('/views/:name', (req, res) => {
   res.render(`${__dirname}/public/views/${req.params.name}`);
 });
 
-var rooms = ['room1', 'room2', 'room3'];
+var rooms = [];
+var nextRoomId = 1;
 var nextUsername = 1;
 var users = {};
 
@@ -80,6 +81,17 @@ io.on('connection', socket => {
     });
 
     users[socket.id].active = false;
+  });
+  
+  socket.on('create-room', data => {
+    rooms.push(nextRoomId);
+    nextRoomId++;
+    socket.broadcast.emit('user:create-room', {
+      rooms: rooms
+    })
+    socket.emit('user:create-room', {
+      rooms: rooms
+    });
   });
 });
 

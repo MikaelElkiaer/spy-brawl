@@ -7,7 +7,7 @@ class HomeController {
   }
 
   createRoom() {
-
+    this.socket.emit('create-room', null);
   }
 
   _setup() {
@@ -24,6 +24,10 @@ class HomeController {
 
     this.socket.on('user:disconnect', data => {
       this.users.splice(this.users.indexOf(data.user));
+    });
+    
+    this.socket.on('user:create-room', data => {
+      this.rooms = data.rooms;
     });
   }
 }
