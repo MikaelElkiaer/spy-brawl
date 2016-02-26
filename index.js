@@ -83,15 +83,13 @@ io.on('connection', socket => {
     users[socket.id].active = false;
   });
   
-  socket.on('create-room', data => {
+  socket.on('create-room', (data, callback) => {
     rooms.push(nextRoomId);
     nextRoomId++;
     socket.broadcast.emit('user:create-room', {
       rooms: rooms
-    })
-    socket.emit('user:create-room', {
-      rooms: rooms
     });
+    callback({rooms: rooms});
   });
 });
 

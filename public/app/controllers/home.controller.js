@@ -7,7 +7,9 @@ class HomeController {
   }
 
   createRoom() {
-    this.socket.emit('create-room', null);
+    this.socket.emit('create-room', null, data => {
+      this.rooms = data.rooms;
+    });
   }
 
   _setup() {
