@@ -81,7 +81,12 @@ io.on('connection', socket => {
   });
 
   socket.on('join', (data, callback) => {
+    if (!rooms[data.roomId]) {
+      callback(null, 'Room doesn\'t exist');
+      return;
+    }
     socket.join(data.roomId);
+    rooms[data.roomId].users[users[socket.id].username] = false;
 
     io.in(data.roomId).clients((error, clients) => {
       callback({ users: clients.map(c => users[c].username) });
@@ -101,6 +106,13 @@ io.on('connection', socket => {
     socket.broadcast.emit('user:disconnect', {
         user: users[socket.id].username
     });
+
+    var username = users[socket.id].username;
+    Object.keys(rooms).forEach(x => {
+      var cur = rooms[x].users;
+      if (cur[username] !== undefined)
+        delete cur[username];
+      });
 
     users[socket.id].active = false;
   });
