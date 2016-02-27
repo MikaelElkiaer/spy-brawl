@@ -9,7 +9,8 @@ import { RoomController } from './controllers/room.controller.js';
 var app = angular
   .module('app', [
     'ui.router',
-    'LocalStorageModule'
+    'LocalStorageModule',
+    'toastr'
   ])
   .service('socketService', SocketService)
   .service('userService', UserService)

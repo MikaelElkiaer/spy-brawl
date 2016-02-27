@@ -1,8 +1,12 @@
-function config(localStorageServiceProvider) {
-  localStorageServiceProvider
-    .setPrefix('spybrawl');
+function config(localStorageServiceProvider, toastrConfig) {
+  localStorageServiceProvider.setPrefix('spybrawl');
+
+  angular.extend(toastrConfig, {
+    maxOpened: 3,
+    preventOpenDuplicates: true
+  });
 }
 
-config.$inject = ['localStorageServiceProvider'];
+config.$inject = ['localStorageServiceProvider', 'toastrConfig'];
 
 export { config };
