@@ -5,7 +5,7 @@ var gulp = require('gulp'),
 
 gulp.task('watcher', cb => {
   livereload.listen();
-  gulp.watch(['!public/views/**/*.jade', 'public/**/*'], e => {
+  gulp.watch(['public/**/*', '!public/views/**/*.jade'], e => {
     livereload.changed(e);
   });
   gulp.watch('public/views/**/*.jade', e => livereload.reload());
