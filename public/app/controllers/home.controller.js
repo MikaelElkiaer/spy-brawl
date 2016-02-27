@@ -27,7 +27,7 @@ class HomeController {
     this.socket.on('user:disconnect', data => {
       this.users.splice(this.users.indexOf(data.user));
     });
-    
+
     this.socket.on('user:create-room', data => {
       this.rooms = data.rooms;
     });
@@ -36,4 +36,4 @@ class HomeController {
 
 HomeController.$inject = ['socketService', 'userService'];
 
-export { HomeController }
+export { HomeController };
