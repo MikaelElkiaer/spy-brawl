@@ -28,7 +28,6 @@ var users = {};
 
 io.use((socket, next) => {
   var userSid = socket.handshake.query.userSid;
-
   if (!userSid || !findUserBySid(userSid)) {
     var newUser = {
       userSid: crypto.createHash('md5').update(new Date().toString()).digest('hex'),
@@ -56,7 +55,12 @@ io.on('connection', socket => {
   socket.on('conn', (data, callback) => {
     callback({
       userSid: users[socket.id].userSid,
-      username: users[socket.id].username,
+      username: users[socket.id].username
+    });
+  });
+
+  socket.on('home', (data, callback) => {
+    callback({
       users: Object.keys(users).filter(x => users[x].active).map(x => users[x].username),
       rooms
     });
