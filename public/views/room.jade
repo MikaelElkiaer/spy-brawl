@@ -18,3 +18,6 @@
                         ng-model='room.chatMsg', ng-keypress='($event.which === 13 && room.chatMsg.length > 0) ? room.sendMessage() : false')
                     div(style='padding: 10px')
                         p(ng-repeat='msg in room.messages track by $index') {{msg}}
+    .row
+        .col-sm-2
+            button.btn.btn-xl.btn-default(ng-click='room.startGame()') Start Game

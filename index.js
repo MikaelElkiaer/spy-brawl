@@ -26,6 +26,20 @@ var rooms = {};
 var nextUsername = 1;
 var users = {};
 
+// TODO: We should probably figure out a better way to store the various
+//       locations and roles rather than directly in the code.
+var locations = {
+  airplane: {
+    roles: ['1st Class Passenger',
+            'Air Marshal',
+            'Mechanic',
+            'Coach Passenger',
+            'Flight Attendant',
+            'Co-Pilot',
+            'Captain']
+  }
+};
+
 io.use((socket, next) => {
   var userSid = socket.handshake.query.userSid;
   if (!userSid || !findUserBySid(userSid)) {
@@ -100,6 +114,25 @@ io.on('connection', socket => {
       }
     };
     callback({ roomId });
+  });
+
+  socket.on('startgame', data => {
+    io.in(data.roomId).clients((error, clients) => {
+      var locationKeys = Object.keys(locations);
+      var location = locationKeys[locationKeys.length * Math.random() << 0];
+      var roles = JSON.parse(JSON.stringify(locations[location].roles));
+
+      for (var i = 0; i <= clients.length; i++) {
+        var clientId = clients.splice(clients.length * Math.random() << 0, 1)[0];
+        if (i === 0) {
+          io.in(clientId).emit('user:role', {role: 'Spy',
+                                             location: 'Unknown'});
+        } else {
+          io.in(clientId).emit('user:role', {role: roles.splice(roles.length * Math.random() << 0, 1)[0],
+                                             location: location});
+        }
+      }
+    });
   });
 });
 

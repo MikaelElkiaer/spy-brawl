@@ -18,6 +18,12 @@ class RoomController {
     this.chatMsg = '';
   }
 
+  startGame() {
+    this.socket.emit('startgame', {
+      roomId: this.roomId
+    });
+  }
+
   _setup(roomId) {
     this.log = angular.element(document.querySelector('#chatLog'));
 
