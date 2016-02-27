@@ -15,7 +15,7 @@ class HomeController {
   }
 
   joinRoom(roomId) {
-    console.log(roomId);
+    this.$state.go('room', { roomId });
   }
 
   _setup() {
