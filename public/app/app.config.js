@@ -5,4 +5,4 @@ function config(localStorageServiceProvider) {
 
 config.$inject = ['localStorageServiceProvider'];
 
-export { config }
+export { config };

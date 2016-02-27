@@ -34,4 +34,4 @@ class UserService {
 
 UserService.$inject = ['localStorageService'];
 
-export { UserService }
+export { UserService };

@@ -17,4 +17,4 @@ function routeConfig($stateProvider, $urlRouterProvider) {
 
 routeConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
 
-export { routeConfig }
+export { routeConfig };

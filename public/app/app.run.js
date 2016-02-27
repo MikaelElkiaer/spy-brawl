@@ -4,4 +4,4 @@ function run (socket, userService) {
 
 run.$inject = ['socketService', 'userService'];
 
-export { run }
+export { run };
