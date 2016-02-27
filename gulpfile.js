@@ -3,6 +3,14 @@ var gulp = require('gulp'),
     spawn = require('child_process').spawn,
     node;
 
+gulp.task('watcher', cb => {
+  livereload.listen();
+  gulp.watch('public/**/*', e => {
+    livereload.changed(e);
+  });
+  cb();
+});
+
 gulp.task('server', cb => {
   if (node)
     node.kill();
