@@ -121,17 +121,21 @@ io.on('connection', socket => {
       var locationKeys = Object.keys(locations);
       var location = locationKeys[locationKeys.length * Math.random() << 0];
       var roles = JSON.parse(JSON.stringify(locations[location].roles));
+      var role = '';
       rooms[data.roomId].location = location;
 
       for (var i = 0; i <= clients.length; i++) {
         var clientId = clients.splice(clients.length * Math.random() << 0, 1)[0];
         if (i === 0) {
-          io.in(clientId).emit('user:role', {role: 'Spy',
+          role = 'Spy';
+          io.in(clientId).emit('user:role', {role: role,
                                              location: 'Unknown'});
         } else {
-          io.in(clientId).emit('user:role', {role: roles.splice(roles.length * Math.random() << 0, 1)[0],
+          role = roles.splice(roles.length * Math.random() << 0, 1)[0];
+          io.in(clientId).emit('user:role', {role: role,
                                              location: location});
         }
+        users[clientId].role = role;
       }
     });
   });
