@@ -20,6 +20,7 @@
     "socket.io": "^1.4.5"
   },
   "devDependencies": {
+    "connect-livereload": "^0.5.4",
     "gulp": "^3.9.0",
     "gulp-livereload": "^3.8.1"
   }

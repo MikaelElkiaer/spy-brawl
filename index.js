@@ -9,6 +9,10 @@ app.set('view engine', 'jade');
 app.use('/public', express.static('public'));
 app.use('/node_modules', express.static('node_modules'));
 
+app.use(require('connect-livereload')({
+  port: 35729
+}));
+
 app.get('/', (req, res) => {
   res.render(`${__dirname}/public/index`);
 });
@@ -82,7 +86,7 @@ io.on('connection', socket => {
 
     users[socket.id].active = false;
   });
-  
+
   socket.on('create-room', (data, callback) => {
     rooms.push(nextRoomId);
     nextRoomId++;
