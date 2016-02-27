@@ -1,5 +1,6 @@
 class HomeController {
-  constructor(socketService, userService) {
+  constructor($state, socketService, userService) {
+    this.$state = $state;
     this.socket = socketService;
     this.userService = userService;
 
@@ -8,7 +9,8 @@ class HomeController {
 
   createRoom() {
     this.socket.emit('create-room', null, data => {
-      this.rooms = data.rooms;
+      if (data.roomId)
+        this.$state.go('room', { roomId: data.roomId});
     });
   }
 
@@ -34,6 +36,6 @@ class HomeController {
   }
 }
 
-HomeController.$inject = ['socketService', 'userService'];
+HomeController.$inject = ['$state', 'socketService', 'userService'];
 
 export { HomeController };
