@@ -131,6 +131,10 @@ io.on('connection', socket => {
   });
 
   socket.on('startgame', data => {
+    if (socket.id !== rooms[data.roomId].host) {
+      return;
+    }
+
     io.in(data.roomId).clients((error, clients) => {
       var locationKeys = Object.keys(locations);
       var location = locationKeys[locationKeys.length * Math.random() << 0];
