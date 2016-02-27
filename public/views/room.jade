@@ -4,9 +4,11 @@
             .panel.panel-default
                 .panel-heading
                     h3.panel-title Users in room
-                .panel-body
-                    ul.list-group
-                        li.list-group-item(ng-class='{ "active": u === room.userService.username }', ng-repeat='u in room.users') {{u}}
+                .panel-body.text-center
+                    span(style='margin: 0px 10px; display: inline-block;',
+                      ng-class='{ "text-info": u === room.userService.username }', ng-repeat='u in room.users')
+                        i.fa.fa-user
+                        | &nbsp;{{u}}
         .col-sm-6
             .panel.panel-default
                 .panel-heading

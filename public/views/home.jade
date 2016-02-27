@@ -18,6 +18,8 @@
             .panel.panel-default
                 .panel-heading
                     h3.panel-title Active Users
-                .panel-body
-                    .list-group
-                        .list-group-item(ng-class='{ "active": u === home.userService.username }', ng-repeat='u in home.users') {{u}}
+                .panel-body.text-center
+                        span(style='margin: 0px 10px; display: inline-block;',
+                          ng-class='{ "text-info": u === home.userService.username }', ng-repeat='u in home.users')
+                            i.fa.fa-user
+                            | &nbsp;{{u}}
