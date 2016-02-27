@@ -1,6 +1,6 @@
 function config(localStorageServiceProvider) {
   localStorageServiceProvider
-    .setPrefix('spyfall');
+    .setPrefix('spybrawl');
 }
 
 config.$inject = ['localStorageServiceProvider'];
