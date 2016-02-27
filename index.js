@@ -121,6 +121,7 @@ io.on('connection', socket => {
       var locationKeys = Object.keys(locations);
       var location = locationKeys[locationKeys.length * Math.random() << 0];
       var roles = JSON.parse(JSON.stringify(locations[location].roles));
+      rooms[data.roomId].location = location;
 
       for (var i = 0; i <= clients.length; i++) {
         var clientId = clients.splice(clients.length * Math.random() << 0, 1)[0];
