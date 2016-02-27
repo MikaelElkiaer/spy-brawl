@@ -5,6 +5,7 @@ class RoomController {
     this.socket = socket;
     this.userService = userService;
     this.roomId = params.roomId;
+    this.isHost = false;
 
     this.messages = [];
     this._setup(this.roomId);
@@ -36,6 +37,7 @@ class RoomController {
       }
       else {
         this.users = data.users;
+        this.isHost = data.isHost;
       }
     });
 

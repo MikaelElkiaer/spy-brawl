@@ -20,4 +20,5 @@
                         p(ng-repeat='msg in room.messages track by $index') {{msg}}
     .row
         .col-sm-2
-            button.btn.btn-xl.btn-default(ng-click='room.startGame()') Start Game
+            div(ng-show='room.isHost')
+                button.btn.btn-xl.btn-default(ng-click='room.startGame()') Start Game
