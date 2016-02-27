@@ -1,5 +1,6 @@
 class HomeController {
-  constructor(socketService, userService) {
+  constructor($state, socketService, userService) {
+    this.$state = $state;
     this.socket = socketService;
     this.userService = userService;
 
@@ -8,14 +9,13 @@ class HomeController {
 
   createRoom() {
     this.socket.emit('create-room', null, data => {
-      this.rooms = data.rooms;
+      if (data.roomId)
+        this.$state.go('room', { roomId: data.roomId});
     });
   }
 
   _setup() {
-    this.socket.emit('conn', null, data => {
-      this.userService.userSid = data.userSid;
-      this.userService.username = data.username;
+    this.socket.emit('home', null, data => {
       this.rooms = data.rooms;
       this.users = data.users;
     });
@@ -27,13 +27,13 @@ class HomeController {
     this.socket.on('user:disconnect', data => {
       this.users.splice(this.users.indexOf(data.user));
     });
-    
+
     this.socket.on('user:create-room', data => {
       this.rooms = data.rooms;
     });
   }
 }
 
-HomeController.$inject = ['socketService', 'userService'];
+HomeController.$inject = ['$state', 'socketService', 'userService'];
 
-export { HomeController }
+export { HomeController };

@@ -21,14 +21,13 @@ app.get('/views/:name', (req, res) => {
   res.render(`${__dirname}/public/views/${req.params.name}`);
 });
 
-var rooms = [];
-var nextRoomId = 1;
+const ROOM_ID_SIZE = 5;
+var rooms = {};
 var nextUsername = 1;
 var users = {};
 
 io.use((socket, next) => {
   var userSid = socket.handshake.query.userSid;
-
   if (!userSid || !findUserBySid(userSid)) {
     var newUser = {
       userSid: crypto.createHash('md5').update(new Date().toString()).digest('hex'),
@@ -56,7 +55,12 @@ io.on('connection', socket => {
   socket.on('conn', (data, callback) => {
     callback({
       userSid: users[socket.id].userSid,
-      username: users[socket.id].username,
+      username: users[socket.id].username
+    });
+  });
+
+  socket.on('home', (data, callback) => {
+    callback({
       users: Object.keys(users).filter(x => users[x].active).map(x => users[x].username),
       rooms
     });
@@ -88,18 +92,24 @@ io.on('connection', socket => {
   });
 
   socket.on('create-room', (data, callback) => {
-    rooms.push(nextRoomId);
-    nextRoomId++;
-    socket.broadcast.emit('user:create-room', {
-      rooms: rooms
-    });
-    callback({rooms: rooms});
+    var roomId = _createRoomId();
+    rooms[roomId] = {
+      host: socket.id,
+      users: {
+        [users[socket.id].username]: false
+      }
+    };
+    callback({ roomId });
   });
 });
 
 http.listen(app.get('port'), () => {
   console.log(`listening on *:${app.get('port')}`);
 });
+
+function _createRoomId() {
+  return crypto.createHash('md5').update(new Date().toString()).digest('hex').substring(0, ROOM_ID_SIZE);
+}
 
 function findUserBySid(userSid) {
   var socketIds = Object.keys(users);

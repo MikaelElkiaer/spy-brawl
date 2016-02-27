@@ -41,4 +41,4 @@ class RoomController {
 
 RoomController.$inject = ['$stateParams', 'socketService', 'userService'];
 
-export { RoomController }
+export { RoomController };

@@ -1,14 +1,20 @@
 class SocketService {
-  constructor($rootScope, $state) {
+  constructor($rootScope, $state, userService) {
       this.$rootScope = $rootScope;
       this.$state = $state;
+      this.userService = userService;
   }
 
   connect(userSid) {
     this.socket = io.connect({ query: `userSid=${userSid}` });
 
-    this.on('error', error => {
-      var error = JSON.parse(error);
+    this.socket.emit('conn', null, data => {
+      this.userService.userSid = data.userSid;
+      this.userService.username = data.username;
+    });
+
+    this.on('error', e => {
+      var error = JSON.parse(e);
     });
   }
 
@@ -20,7 +26,7 @@ class SocketService {
           callback.apply(this.socket, cArgs);
         }
       });
-    })
+    });
   }
 
   on(eventName, callback) {
@@ -34,6 +40,6 @@ class SocketService {
 
 }
 
-SocketService.$inject = ['$rootScope', '$state']
+SocketService.$inject = ['$rootScope', '$state', 'userService'];
 
-export { SocketService }
+export { SocketService };
