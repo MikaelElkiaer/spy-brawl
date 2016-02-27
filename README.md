@@ -21,13 +21,9 @@ Please tell me oh great one, how do I, a simple dimwit, run your cool shit?
 * Start the server: `npm start` (this will automatically reload every time index.js is changed)
 
 ## Using livereload
-If you are using Chrome, you can take advantage of livereload, which will automatically refresh the page when changes are made.
-First, install the livereload extension: https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei
-
 * If you haven't already, start a local server (see above)
 * Run `npm run watcher`
 * Open web-client in a new tab (Default: http://localhost:5000/)
-* Click the livereload chrome-extension (the circle should fill)
 
 ## Deploying to heroku
 
