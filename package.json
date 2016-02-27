@@ -1,12 +1,13 @@
 {
-  "name": "spyfall-mobile",
+  "name": "spy-brawl",
   "authors": [
     "mikaelec <mikaelec@gmail.com>"
   ],
   "main": "index.js",
   "version": "0.0.1",
   "scripts": {
-    "start": "gulp default"
+    "start": "gulp default",
+    "watch": "gulp watcher"
   },
   "dependencies": {
     "angular": "^1.5.0",
