@@ -1,6 +1,7 @@
 class RoomController {
-  constructor($state, params, socket, userService) {
+  constructor($state, params, toastr, socket, userService) {
     this.$state = $state;
+    this.toastr = toastr;
     this.socket = socket;
     this.userService = userService;
     this.roomId = params.roomId;
@@ -30,6 +31,7 @@ class RoomController {
 
     this.socket.emit('join', { roomId }, (data, error) => {
       if (error) {
+        this.toastr.error(error);
         this.$state.go('home');
       }
       else {
@@ -51,6 +53,6 @@ class RoomController {
   }
 }
 
-RoomController.$inject = ['$state', '$stateParams', 'socketService', 'userService'];
+RoomController.$inject = ['$state', '$stateParams', 'toastr', 'socketService', 'userService'];
 
 export { RoomController };
