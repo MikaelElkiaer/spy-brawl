@@ -22,7 +22,7 @@ Please tell me oh great one, how do I, a simple dimwit, run your cool shit?
 
 ## Using livereload
 * If you haven't already, start a local server (see above)
-* Run `npm run watcher`
+* Run `npm run watch`
 * Open web-client in a new tab (Default: http://localhost:5000/)
 
 ## Deploying to heroku
