@@ -22,7 +22,7 @@ app.get('/views/:name', (req, res) => {
 });
 
 const ROOM_ID_SIZE = 5;
-var rooms = [];
+var rooms = {};
 var nextUsername = 1;
 var users = {};
 
@@ -89,8 +89,12 @@ io.on('connection', socket => {
 
   socket.on('create-room', (data, callback) => {
     var roomId = _createRoomId();
-    rooms.push(roomId);
-    console.log(rooms);
+    rooms[roomId] = {
+      host: socket.id,
+      users: {
+        [users[socket.id].username]: false
+      }
+    };
     callback({ roomId });
   });
 });
