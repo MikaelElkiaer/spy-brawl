@@ -4,6 +4,7 @@ html
         title Spy-brawl
         link(rel='stylesheet', href='/node_modules/bootstrap/dist/css/bootstrap.css')
         link(rel='stylesheet', href='/node_modules/font-awesome/css/font-awesome.css')
+        link(rel='stylesheet', href='/node_modules/angular-toastr/dist/angular-toastr.css')
     body
         nav.navbar.navbar-default
             .container-fluid
@@ -19,9 +20,10 @@ html
         div(ui-view)
         script(src='/socket.io/socket.io.js')
         script(src='/node_modules/angular/angular.js')
+        script(src='/node_modules/angular-animate/angular-animate.js')
         script(src='/node_modules/angular-local-storage/dist/angular-local-storage.js')
         script(src='/node_modules/angular-ui-router/release/angular-ui-router.js')
-        script(src="/node_modules/angular-toastr/dist/angular-toastr.js")
+        script(src="/node_modules/angular-toastr/dist/angular-toastr.tpls.js")
         script(src='https://google.github.io/traceur-compiler/bin/traceur.js')
         script(src='https://google.github.io/traceur-compiler/bin/BrowserSystem.js')
         script(src='https://google.github.io/traceur-compiler/src/bootstrap.js')

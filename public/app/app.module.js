@@ -8,6 +8,7 @@ import { RoomController } from './controllers/room.controller.js';
 
 var app = angular
   .module('app', [
+    'ngAnimate',
     'ui.router',
     'LocalStorageModule',
     'toastr'
