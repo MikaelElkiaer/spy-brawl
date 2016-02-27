@@ -1,5 +1,6 @@
 class RoomController {
-  constructor(params, socket, userService) {
+  constructor($state, params, socket, userService) {
+    this.$state = $state;
     this.socket = socket;
     this.userService = userService;
     this.roomId = params.roomId;
@@ -27,8 +28,13 @@ class RoomController {
   _setup(roomId) {
     this.log = angular.element(document.querySelector('#chatLog'));
 
-    this.socket.emit('join', { roomId }, data => {
-      this.users = data.users;
+    this.socket.emit('join', { roomId }, (data, error) => {
+      if (error) {
+        this.$state.go('home');
+      }
+      else {
+        this.users = data.users;
+      }
     });
 
     this.socket.on('user:join', data => {
@@ -45,6 +51,6 @@ class RoomController {
   }
 }
 
-RoomController.$inject = ['$stateParams', 'socketService', 'userService'];
+RoomController.$inject = ['$state', '$stateParams', 'socketService', 'userService'];
 
 export { RoomController };

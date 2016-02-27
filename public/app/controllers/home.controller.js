@@ -14,6 +14,10 @@ class HomeController {
     });
   }
 
+  joinRoom(roomId) {
+    this.$state.go('room', { roomId });
+  }
+
   _setup() {
     this.socket.emit('home', null, data => {
       this.rooms = data.rooms;

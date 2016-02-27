@@ -5,14 +5,19 @@
                 .panel-heading
                     h3.panel-title Menu
                 .panel-body.text-center
-                    button.btn.btn-default(ng-click='home.createRoom()')
+                    button.btn.btn-default(style='width: 100%;', ng-click='home.createRoom()')
                         i.fa.fa-plus
                         | &nbsp;Create Game
                     br
                     br
-                    button.btn.btn-default
-                        i.fa.fa-arrow-right
-                        | &nbsp;Join Game
+                    form(name='form', ng-submit='form.$valid && home.joinRoom(joinRoomId)', novalidate)
+                        .input-group
+                            input.form-control(type='text', name='roomId', placeholder='Room Id',
+                              required, pattern='[0-9a-f]{5}', minlength='5', maxlength='5'
+                              ng-model='joinRoomId')
+                            span.input-group-btn
+                                button.btn.btn-default(type='submit')
+                                    i.fa.fa-arrow-right
     .row
         .col-sm-4.col-sm-offset-4
             .panel.panel-default
