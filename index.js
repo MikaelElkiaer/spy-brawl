@@ -158,6 +158,17 @@ io.on('connection', socket => {
       }
     });
   });
+  
+  socket.on('toggleready', data => {
+    var username = users[socket.id].username;
+    var isReady = rooms[data.roomId].users[username];
+    isReady = !isReady;
+    rooms[data.roomId].users[users[socket.id].username] = isReady;
+    io.in(data.roomId).emit('user:toggleready', {
+      user: username,
+      isReady: isReady
+    });
+  });
 
   socket.on('change-username', (data, callback) => {
     var oldUsername = users[socket.id].username;

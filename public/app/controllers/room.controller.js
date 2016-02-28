@@ -25,6 +25,12 @@ class RoomController {
       roomId: this.roomId
     });
   }
+  
+  toggleReady() {
+    this.socket.emit('toggleready', {
+      roomId: this.roomId
+    });
+  }
 
   _setup(roomId) {
     this.log = angular.element(document.querySelector('#chatLog'));
@@ -56,6 +62,10 @@ class RoomController {
     this.socket.on('user:change-username', data => {
       this.users[data.newUsername] = this.users[data.oldUsername];
       delete this.users[data.oldUsername];
+    });
+    
+    this.socket.on('user:toggleready', data => {
+      this.users[data.user] = data.isReady;
     });
   }
 }
