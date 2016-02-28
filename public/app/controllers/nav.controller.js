@@ -30,11 +30,20 @@ class NavController {
   }
 }
 
-changeUsernameController.$inject = ['$scope', '$uibModalInstance', 'username'];
-function changeUsernameController ($scope, theModal, username) {
+changeUsernameController.$inject = ['$scope', '$uibModalInstance', 'socketService', 'username'];
+function changeUsernameController ($scope, theModal, socket, username) {
   $scope.newUsername = username;
-  $scope.save = () => { theModal.close($scope.newUsername); };
+  $scope.save = save;
   $scope.cancel = () => { theModal.dismiss('cancel'); };
+
+  function save() {
+    socket.emit('change-username', { newUsername: $scope.newUsername }, (data, error) => {
+      if (error)
+        theModal.dismiss('error');
+      else
+        theModal.close(data.newUsername);
+    });
+  }
 }
 
 NavController.$inject = ['$uibModal', 'toastr', 'userService'];
