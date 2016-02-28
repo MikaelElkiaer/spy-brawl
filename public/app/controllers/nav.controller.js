@@ -12,11 +12,7 @@ class NavController {
       animation: true,
       size: 'sm',
       templateUrl: '/views/change-username-modal',
-      controller: ['$scope', '$uibModalInstance', 'username', function ($scope, theModal, username) {
-        $scope.newUsername = username;
-        $scope.save = () => { theModal.close($scope.newUsername); };
-        $scope.cancel = () => { theModal.dismiss('cancel'); };
-      }],
+      controller: changeUsernameController,
       resolve: {
         username: () => this.username
       }
@@ -34,6 +30,12 @@ class NavController {
   }
 }
 
-NavController.$inject = ['$uibModal', 'toastr', 'userService'];
+changeUsernameController.$inject = ['$scope', '$uibModalInstance', 'username'];
+function changeUsernameController ($scope, theModal, username) {
+  $scope.newUsername = username;
+  $scope.save = () => { theModal.close($scope.newUsername); };
+  $scope.cancel = () => { theModal.dismiss('cancel'); };
+}
 
+NavController.$inject = ['$uibModal', 'toastr', 'userService'];
 export { NavController };
