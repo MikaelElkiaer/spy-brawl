@@ -5,7 +5,6 @@ class RoomController {
     this.socket = socket;
     this.userService = userService;
     this.roomId = params.roomId;
-    this.isHost = false;
 
     this.messages = [];
     this._setup(this.roomId);
@@ -38,15 +37,16 @@ class RoomController {
       else {
         this.users = data.users;
         this.isHost = data.isHost;
+        this.host = data.host
       }
     });
 
     this.socket.on('user:join', data => {
-      this.users.push(data.user);
+      this.users[data.user] = false;
     });
 
     this.socket.on('user:disconnect', data => {
-      this.users.splice(this.users.indexOf(data.user));
+      delete this.users[data.user];
     });
 
     this.socket.on('user:msg', data => {
@@ -54,7 +54,8 @@ class RoomController {
     });
 
     this.socket.on('user:change-username', data => {
-      this.users[this.users.indexOf(data.oldUsername)] = data.newUsername;
+      this.users[data.newUsername] = this.users[data.oldUsername];
+      delete this.users[data.oldUsername];
     });
   }
 }

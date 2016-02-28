@@ -7,9 +7,9 @@
                     h3.panel-title Users in room
                 .panel-body.text-center
                     span(style='margin: 0px 10px; display: inline-block;',
-                      ng-class='{ "text-info": u === room.userService.username }', ng-repeat='u in room.users')
+                      ng-class='{ "text-info": user === room.userService.username }', ng-repeat='(user, ready) in room.users')
                         i.fa.fa-user
-                        | &nbsp;{{u}}
+                        | &nbsp;{{user}} - {{ready}}
         .col-sm-6
             .panel.panel-default
                 .panel-heading

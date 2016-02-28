@@ -89,8 +89,9 @@ io.on('connection', socket => {
     rooms[data.roomId].users[users[socket.id].username] = false;
 
     io.in(data.roomId).clients((error, clients) => {
-      callback({ users: clients.map(c => users[c].username),
-                 isHost: (socket.id === rooms[data.roomId].host)
+      callback({ isHost: (socket.id === rooms[data.roomId].host),
+                 host: users[rooms[data.roomId].host].username,
+                 users: rooms[data.roomId].users
                });
     });
 
