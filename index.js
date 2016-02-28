@@ -164,7 +164,7 @@ io.on('connection', socket => {
     if (_isValidUsername(newUsername)) {
       users[socket.id].username = newUsername;
       callback({ newUsername });
-      socket.emit('user:change-username', {
+      io.emit('user:change-username', {
         oldUsername,
         newUsername
       });
