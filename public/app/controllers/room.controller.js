@@ -50,6 +50,10 @@ class RoomController {
     this.socket.on('user:msg', data => {
       this.messages.push(data.chatMsg);
     });
+
+    this.socket.on('user:change-username', data => {
+      this.users[this.users.indexOf(data.oldUsername)] = data.newUsername;
+    });
   }
 }
 

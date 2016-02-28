@@ -35,6 +35,10 @@ class HomeController {
     this.socket.on('user:create-room', data => {
       this.rooms = data.rooms;
     });
+
+    this.socket.on('user:change-username', data => {
+      this.users[this.users.indexOf(data.oldUsername)] = data.newUsername;
+    });
   }
 }
 
