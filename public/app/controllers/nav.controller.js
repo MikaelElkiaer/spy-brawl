@@ -20,6 +20,7 @@ class NavController {
 
     theModal.result.then(newUsername => {
       this.username = newUsername;
+      this.userService.username = newUsername;
     }, reason => {
         this.toastr.warning('Username was not changed...');
     });
