@@ -7,17 +7,19 @@ html
         link(rel='stylesheet', href='/node_modules/angular-toastr/dist/angular-toastr.css')
         link(rel='stylesheet', href='/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-csp.css')
     body
-        nav.navbar.navbar-default
+        nav.navbar.navbar-default(ng-controller='navController as nav')
             .container-fluid
             .navbar-header
                 button.navbar-toggle(type='button', ng-init='isCollapsed = true', ng-click='isCollapsed = !isCollapsed')
                     span.sr-only Toggle navigation
                     span.icon-bar
                     span.icon-bar
-                    span.icon-bar              
+                    span.icon-bar
                 a.navbar-brand(ui-sref='home') Spy-brawl
-            .navbar-collapse(ng-class: {collapse: isCollapsed})
-                ul.nav.navbar-nav
+            .navbar-collapse(ng-class='{ collapse: isCollapsed }')
+                ul.nav.navbar-nav.navbar-right
+                    li                        
+                        a(style='cursor: pointer;', ng-click='nav.changeUsernameModal()') {{ nav.username }}
         div(ui-view)
         script(src='/socket.io/socket.io.js')
         script(src='/node_modules/angular/angular.js')

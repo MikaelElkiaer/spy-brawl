@@ -151,6 +151,19 @@ io.on('connection', socket => {
       }
     });
   });
+
+  socket.on('change-username', (data, callback) => {
+    var oldUsername = users[socket.id].username;
+    var newUsername = data.newUsername;
+    if (_isValidUsername(newUsername)) {
+      users[socket.id].username = newUsername;
+      callback({ newUsername });
+      socket.emit('user:change-username', {
+        oldUsername,
+        newUsername
+      });
+    }
+  });
 });
 
 http.listen(app.get('port'), () => {
@@ -173,4 +186,8 @@ function findUserBySid(userSid) {
 
 function getNextUsername() {
   return 'Guest ' + nextUsername++ % 100;
+}
+
+function _isValidUsername(username) {
+  return true;
 }
