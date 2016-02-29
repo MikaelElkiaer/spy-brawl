@@ -21,8 +21,10 @@ class RoomController {
   }
 
   startGame() {
-    this.socket.emit('startgame', {
-      roomId: this.roomId
+    this.socket.emit('startgame', { roomId: this.roomId }, (data, error) => {
+      if (error) {
+        this.toastr.warning(error);
+      }
     });
   }
   

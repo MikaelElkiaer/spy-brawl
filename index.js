@@ -133,11 +133,19 @@ io.on('connection', socket => {
     callback({ roomId });
   });
 
-  socket.on('startgame', data => {
+  socket.on('startgame', (data, callback) => {
     if (socket.id !== rooms[data.roomId].host) {
+      callback(null, 'Only the host can start the game');
       return;
     }
-
+    
+    for (var u in rooms[data.roomId].users) {
+      if (!rooms[data.roomId].users[u]) {
+        callback(u, 'Not all users are ready');
+        return;
+      }
+    }
+    
     io.in(data.roomId).clients((error, clients) => {
       var locationKeys = Object.keys(locations);
       var location = locationKeys[locationKeys.length * Math.random() << 0];
