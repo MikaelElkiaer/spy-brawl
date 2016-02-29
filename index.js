@@ -86,10 +86,12 @@ io.on('connection', socket => {
       return;
     }
     socket.join(data.roomId);
-    rooms[data.roomId].users[users[socket.id].username] = false;
+    
+    var isHost = (socket.id === rooms[data.roomId].host);
+    rooms[data.roomId].users[users[socket.id].username] = isHost;
 
     io.in(data.roomId).clients((error, clients) => {
-      callback({ isHost: (socket.id === rooms[data.roomId].host),
+      callback({ isHost: isHost,
                  host: users[rooms[data.roomId].host].username,
                  users: rooms[data.roomId].users
                });
