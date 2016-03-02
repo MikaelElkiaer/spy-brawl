@@ -186,6 +186,34 @@ io.on('connection', socket => {
                                               });
   });
   
+  socket.on('pause', (data, callback) => {
+    var room = rooms[data.roomId];
+
+    if (room.state !== 'main') {
+      callback(null, 'Cannot pause at this time');
+      return;
+    }
+
+    if (users[socket.id].role === 'Spy' && !data.intent) {
+      callback({ isSpy: true });
+      return;
+    }
+    room.timer.stop();
+    room.state = 'paused';
+
+    if (data.intent === 'guessLocation') {
+      if (users[socket.id].role !== 'Spy') {
+        callback(null, 'Only spies can attempt to guess the location');
+        return;
+      }
+      socket.to(data.roomId).broadcast.emit('user:waitforlocation', null);
+      io.to(socket.id).emit('spy:guesslocation', null);
+    } else {
+      socket.to(data.roomId).broadcast.emit('user:waitforaccusation', null);
+      io.to(socket.id).emit('user:accuse', null);
+    }
+  });
+
   socket.on('toggleready', data => {
     var username = users[socket.id].username;
     var isReady = rooms[data.roomId].users[username];

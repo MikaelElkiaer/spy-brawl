@@ -28,6 +28,18 @@ class RoomController {
     });
   }
   
+  pause(intent) {
+    this.socket.emit('pause', { roomId: this.roomId, intent: intent }, (data, error) => {
+      if (error) {
+        this.toastr.error(error);
+      } else {
+        if (data.isSpy) {
+          this.isSpy = true;
+        }
+      }
+    });
+  }
+
   toggleReady() {
     this.socket.emit('toggleready', {
       roomId: this.roomId
@@ -73,6 +85,7 @@ class RoomController {
     this.socket.on('user:startgame', data => {
       this.startTime = data.startTime;
       this.endTime = data.endTime;
+      this.isPaused = false;
     });
   }
 }
