@@ -69,6 +69,11 @@ class RoomController {
     this.socket.on('user:toggleready', data => {
       this.users[data.user] = data.isReady;
     });
+
+    this.socket.on('user:startgame', data => {
+      this.startTime = data.startTime;
+      this.endTime = data.endTime;
+    });
   }
 }
 
