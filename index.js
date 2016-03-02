@@ -153,7 +153,8 @@ io.on('connection', socket => {
       var role = '';
       rooms[data.roomId].location = location;
 
-      for (var i = 0; i <= clients.length; i++) {
+      var clientCount = clients.length;
+      for (var i = 0; i < clientCount; i++) {
         var clientId = clients.splice(clients.length * Math.random() << 0, 1)[0];
         if (i === 0) {
           role = 'Spy';
