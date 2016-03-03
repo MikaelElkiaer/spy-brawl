@@ -23,6 +23,4 @@
         .col-sm-2
             button.btn.btn-xl.btn-default(ng-if = 'room.isHost === true', ng-click='room.startGame()') Start Game
             button.btn.btn-xl.btn-default(ng-if = 'room.isHost === false', ng-click='room.toggleReady()') Toggle Ready
-            button.btn.btn-xl.btn.default(ng-disabled = 'room.isPaused !== false', ng-click = 'room.pause()') Pause
-            button.btn.btn-xl.btn.default(ng-if = 'room.isSpy === true', ng-click = "room.pause('accuse')") Accuse Player
-            button.btn.btn-xl.btn.default(ng-if = 'room.isSpy === true', ng-click = "room.pause('guessLocation')") Guess Location
+            button.btn.btn-xl.btn-default(ng-disabled = 'room.isPaused !== false', ng-click = 'room.pause()') Pause

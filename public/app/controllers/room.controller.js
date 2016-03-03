@@ -1,10 +1,11 @@
 class RoomController {
-  constructor($state, params, toastr, socket, userService) {
+  constructor($state, params, toastr, socket, userService, $uibModal) {
     this.$state = $state;
     this.toastr = toastr;
     this.socket = socket;
     this.userService = userService;
     this.roomId = params.roomId;
+    this.$modal = $uibModal;
 
     this.messages = [];
     this._setup(this.roomId);
@@ -34,7 +35,15 @@ class RoomController {
         this.toastr.error(error);
       } else {
         if (data.isSpy) {
-          this.isSpy = true;
+          var theModal = this.$modal.open({
+              animation: true,
+              size: 'sm',
+              templateUrl: '/views/select-pause-action-modal',
+              controller: selectPauseActionController,
+              resolve: {
+                roomId: () => this.roomId
+              }
+          });
         }
       }
     });
@@ -90,6 +99,33 @@ class RoomController {
   }
 }
 
-RoomController.$inject = ['$state', '$stateParams', 'toastr', 'socketService', 'userService'];
+RoomController.$inject = ['$state', '$stateParams', 'toastr', 'socketService', 'userService', '$uibModal'];
+
+
+selectPauseActionController.$inject = ['$scope', '$uibModalInstance', 'socketService', 'roomId'];
+function selectPauseActionController ($scope, theModal, socket, roomId) {
+  $scope.accuse = accuse;
+  $scope.guessLocation = guessLocation;
+  
+  function accuse() {
+    socket.emit('pause', { roomId: roomId, intent: 'accuse'}, (data, error) => {
+      if (error) {
+        theModal.dismiss(error);
+      } else {
+        theModal.close();
+      }
+    });
+  }
+  
+  function guessLocation() {
+    socket.emit('pause', { roomId: roomId, intent: 'guessLocation'}, (data, error) => {
+      if (error) {
+        theModal.dismiss(error);
+      } else {
+        theModal.close();
+      }
+    });
+  }
+}
 
 export { RoomController };
