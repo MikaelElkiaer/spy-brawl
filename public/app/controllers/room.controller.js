@@ -39,9 +39,10 @@ class RoomController {
               animation: true,
               size: 'sm',
               templateUrl: '/views/select-pause-action-modal',
-              controller: selectPauseActionController,
+              controller: roomModalController,
               resolve: {
-                roomId: () => this.roomId
+                roomId: () => {return this.roomId},
+                users: () => {return this.users}
               }
           });
         }
@@ -115,6 +116,18 @@ class RoomController {
     // The player who paused is asked to select a player
     this.socket.on('user:accuse', data => {
       this.isPaused = true;
+      var theModal = this.$modal.open({
+          animation: true,
+          size: 'sm',
+          templateUrl: '/views/accuse-modal',
+          controller: roomModalController,
+          resolve: {
+            roomId: () => {return this.roomId},
+            users: () => {return this.users}
+          },
+        backdrop: 'static',
+        keyboard: false
+      });
     });
   }
 }
@@ -122,30 +135,36 @@ class RoomController {
 RoomController.$inject = ['$state', '$stateParams', 'toastr', 'socketService', 'userService', '$uibModal'];
 
 
-selectPauseActionController.$inject = ['$scope', '$uibModalInstance', 'socketService', 'roomId'];
-function selectPauseActionController ($scope, theModal, socket, roomId) {
+roomModalController.$inject = ['$scope', '$uibModalInstance', 'socketService', 'userService', 'roomId', 'users'];
+function roomModalController ($scope, theModal, socket, userService, roomId, users) {
+  $scope.userService = userService;
+  $scope.selectAccuseAction = selectAccuseAction;
+  $scope.selectGuessLocationAction = selectGuessLocationAction;
   $scope.accuse = accuse;
   $scope.guessLocation = guessLocation;
-  
-  function accuse() {
+  $scope.users = users;
+
+  function selectAccuseAction() {
     socket.emit('pause', { roomId: roomId, intent: 'accuse'}, (data, error) => {
       if (error) {
         theModal.dismiss(error);
-      } else {
-        theModal.close();
       }
     });
+    theModal.close();
   }
-  
-  function guessLocation() {
+
+  function selectGuessLocationAction() {
     socket.emit('pause', { roomId: roomId, intent: 'guessLocation'}, (data, error) => {
       if (error) {
         theModal.dismiss(error);
-      } else {
-        theModal.close();
       }
     });
+    theModal.close();
   }
+
+  function accuse(user) {}
+
+  function guessLocation(location) {}
 }
 
 export { RoomController };
