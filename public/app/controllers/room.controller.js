@@ -96,11 +96,13 @@ class RoomController {
       this.startTime = data.startTime;
       this.endTime = data.endTime;
       this.isPaused = false;
+      this.isStarted = true;
     });
 
     // Players are waiting for the spy to select a location
     this.socket.on('user:waitforlocation', data => {
       this.isPaused = true;
+      this.pauseReason = 'Waiting for ' + data.user + ' to select a location.';
     });
 
     // Spy is asked to select a location
@@ -111,6 +113,7 @@ class RoomController {
     // Players are waiting for the player who paused to select a player
     this.socket.on('user:waitforaccusation', data => {
       this.isPaused = true;
+      this.pauseReason = 'Waiting for ' + data.user + ' to select a player';
     });
 
     // The player who paused is asked to select a player
