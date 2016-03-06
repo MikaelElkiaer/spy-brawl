@@ -42,7 +42,8 @@ class RoomController {
               controller: roomModalController,
               resolve: {
                 roomId: () => {return this.roomId},
-                users: () => {return this.users}
+                users: () => {return this.users},
+                locations: () => {return this.locations}
               }
           });
         }
@@ -108,6 +109,20 @@ class RoomController {
     // Spy is asked to select a location
     this.socket.on('spy:guesslocation', data => {
       this.isPaused = true;
+      this.locations = data.locations;
+      var theModal = this.$modal.open({
+          animation: true,
+          size: 'sm',
+          templateUrl: '/views/guess-location-modal',
+          controller: roomModalController,
+          resolve: {
+            roomId: () => {return this.roomId},
+            users: () => {return this.users},
+            locations: () => {return this.locations}
+          },
+          backdrop: 'static',
+          keyboard: false
+      });
     });
 
     // Players are waiting for the player who paused to select a player
@@ -126,7 +141,8 @@ class RoomController {
           controller: roomModalController,
           resolve: {
             roomId: () => {return this.roomId},
-            users: () => {return this.users}
+            users: () => {return this.users},
+            locations: () => {return this.locations}
           },
         backdrop: 'static',
         keyboard: false
@@ -138,14 +154,15 @@ class RoomController {
 RoomController.$inject = ['$state', '$stateParams', 'toastr', 'socketService', 'userService', '$uibModal'];
 
 
-roomModalController.$inject = ['$scope', '$uibModalInstance', 'socketService', 'userService', 'roomId', 'users'];
-function roomModalController ($scope, theModal, socket, userService, roomId, users) {
+roomModalController.$inject = ['$scope', '$uibModalInstance', 'socketService', 'userService', 'roomId', 'users', 'locations'];
+function roomModalController ($scope, theModal, socket, userService, roomId, users, locations) {
   $scope.userService = userService;
   $scope.selectAccuseAction = selectAccuseAction;
   $scope.selectGuessLocationAction = selectGuessLocationAction;
   $scope.accuse = accuse;
   $scope.guessLocation = guessLocation;
   $scope.users = users;
+  $scope.locations = locations;
 
   function selectAccuseAction() {
     socket.emit('pause', { roomId: roomId, intent: 'accuse'}, (data, error) => {
