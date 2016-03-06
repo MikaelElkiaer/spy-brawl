@@ -109,7 +109,7 @@ class RoomController {
     });
 
     // Players are waiting for the player who paused to select a player
-    this.socket.on('user:waitforaccusaion', data => {
+    this.socket.on('user:waitforaccusation', data => {
       this.isPaused = true;
     });
 
