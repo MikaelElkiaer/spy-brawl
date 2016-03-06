@@ -206,10 +206,10 @@ io.on('connection', socket => {
         callback(null, 'Only spies can attempt to guess the location');
         return;
       }
-      socket.to(data.roomId).broadcast.emit('user:waitforlocation', {user: users[socket.id]});
+      socket.to(data.roomId).broadcast.emit('user:waitforlocation', {user: users[socket.id].username});
       io.to(socket.id).emit('spy:guesslocation', null);
     } else {
-      socket.to(data.roomId).broadcast.emit('user:waitforaccusation', {user: users[socket.id]});
+      socket.to(data.roomId).broadcast.emit('user:waitforaccusation', {user: users[socket.id].username});
       io.to(socket.id).emit('user:accuse', null);
     }
   });
