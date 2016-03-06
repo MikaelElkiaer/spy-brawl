@@ -3,6 +3,7 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var crypto = require('crypto');
+var Stopwatch = require('timer-stopwatch');
 
 app.set('port', (process.env.PORT || 5000));
 app.set('view engine', 'jade');
@@ -22,6 +23,7 @@ app.get('/views/:name', (req, res) => {
 });
 
 const ROOM_ID_SIZE = 5;
+const DEFAULT_GAME_TIME = 8 * 60000; // 8 minutes in ms
 var rooms = {};
 var nextUsername = 1;
 var users = {};
@@ -168,8 +170,50 @@ io.on('connection', socket => {
         users[clientId].role = role;
       }
     });
+
+    rooms[data.roomId].startTime = new Date();
+    rooms[data.roomId].endTime = new Date(rooms[data.roomId].startTime.getTime() + 8*60000);
+    var timer = new Stopwatch(DEFAULT_GAME_TIME);
+    timer.onDone( () => {
+      // Game Over
+    });
+    timer.start();
+    rooms[data.roomId].timer = timer;
+    rooms[data.roomId].state = 'main';
+
+    io.to(data.roomId).emit('user:startgame', { startTime: rooms[data.roomId].startTime,
+                                                endTime: rooms[data.roomId].endTime
+                                              });
   });
   
+  socket.on('pause', (data, callback) => {
+    var room = rooms[data.roomId];
+
+    if (room.state !== 'main') {
+      callback(null, 'Cannot pause at this time');
+      return;
+    }
+
+    if (users[socket.id].role === 'Spy' && !data.intent) {
+      callback({ isSpy: true });
+      return;
+    }
+    room.timer.stop();
+    room.state = 'paused';
+
+    if (data.intent === 'guessLocation') {
+      if (users[socket.id].role !== 'Spy') {
+        callback(null, 'Only spies can attempt to guess the location');
+        return;
+      }
+      socket.to(data.roomId).broadcast.emit('user:waitforlocation', {user: users[socket.id].username});
+      io.to(socket.id).emit('spy:guesslocation', {locations: Object.keys(locations)});
+    } else {
+      socket.to(data.roomId).broadcast.emit('user:waitforaccusation', {user: users[socket.id].username});
+      io.to(socket.id).emit('user:accuse', null);
+    }
+  });
+
   socket.on('toggleready', data => {
     var username = users[socket.id].username;
     var isReady = rooms[data.roomId].users[username];

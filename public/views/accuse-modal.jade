@@ -1,0 +1,7 @@
+.modal-header
+  h3.modal-title Select Player
+.modal-body
+  .row
+    .col-sm-12
+      div(ng-repeat='(user, ready) in users')
+        button.list-group-item.active(ng-if='userService.username !== user', ng-click='accuse({user: user})') {{user}}

@@ -19,7 +19,14 @@
                         ng-model='room.chatMsg', ng-keypress='($event.which === 13 && room.chatMsg.length > 0) ? room.sendMessage() : false')
                     div(style='padding: 10px')
                         p(ng-repeat='msg in room.messages track by $index') {{msg}}
-    .row
-        .col-sm-2
-            button.btn.btn-xl.btn-default(ng-if = 'room.isHost === true', ng-click='room.startGame()') Start Game
-            button.btn.btn-xl.btn-default(ng-if = 'room.isHost === false', ng-click='room.toggleReady()') Toggle Ready
+
+div(pageslide='', ps-open='true', ps-side='bottom', ps-size='50px', style='background-color: #333')
+  .row
+    .col-xs-2.col-xs-push-5
+      div(ng-if='room.isStarted !== true')
+          button.btn.navbar-btn.btn-xl.btn-default(ng-if = 'room.isHost === true', ng-click='room.startGame()') Start Game {{room.isPaused}}
+          button.btn.navbar-btn.btn-xl.btn-default(ng-if = 'room.isHost === false', ng-click='room.toggleReady()') Toggle Ready
+      div(ng-if='room.isStarted === true')
+          button.btn.navbar-btn.btn-xl.btn-default(ng-disabled = 'room.isPaused !== false', ng-click = 'room.pause()') Pause
+div(pageslide='', ps-open='room.isPaused', ps-side='bottom', ps-size='50px', style='background-color:#f0ad4e')
+  p.text-center {{room.pauseReason}}

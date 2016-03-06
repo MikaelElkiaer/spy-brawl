@@ -13,6 +13,7 @@
     "angular": "^1.5.0",
     "angular-animate": "^1.5.0",
     "angular-local-storage": "^0.2.2",
+    "angular-pageslide-directive": "^1.0.6",
     "angular-toastr": "^1.7.0",
     "angular-touch": "^1.5.0",
     "angular-ui-bootstrap": "^1.2.1",
@@ -21,7 +22,8 @@
     "express": "^4.13.4",
     "font-awesome": "^4.5.0",
     "jade": "^1.11.0",
-    "socket.io": "^1.4.5"
+    "socket.io": "^1.4.5",
+    "timer-stopwatch": "^0.2.0"
   },
   "devDependencies": {
     "connect-livereload": "^0.5.4",
