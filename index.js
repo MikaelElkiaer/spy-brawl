@@ -207,7 +207,7 @@ io.on('connection', socket => {
         return;
       }
       socket.to(data.roomId).broadcast.emit('user:waitforlocation', {user: users[socket.id].username});
-      io.to(socket.id).emit('spy:guesslocation', null);
+      io.to(socket.id).emit('spy:guesslocation', {locations: Object.keys(locations)});
     } else {
       socket.to(data.roomId).broadcast.emit('user:waitforaccusation', {user: users[socket.id].username});
       io.to(socket.id).emit('user:accuse', null);
