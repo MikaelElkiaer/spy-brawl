@@ -14,7 +14,8 @@ var app = angular
     'ui.router',
     'ui.bootstrap',
     'LocalStorageModule',
-    'toastr'
+    'toastr',
+    'pageslide-directive'
   ])
   .service('socketService', SocketService)
   .service('userService', UserService)
