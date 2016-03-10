@@ -24,7 +24,7 @@ div(pageslide='', ps-open='true', ps-side='bottom', ps-size='50px', style='backg
   .row
     .col-xs-2.col-xs-push-5
       div(ng-if='room.isStarted !== true')
-          button.btn.navbar-btn.btn-xl.btn-default(ng-if = 'room.isHost === true', ng-click='room.startGame()') Start Game {{room.isPaused}}
+          button.btn.navbar-btn.btn-xl.btn-default(ng-if = 'room.isHost === true', ng-click='room.startGame()') Start Game
           button.btn.navbar-btn.btn-xl.btn-default(ng-if = 'room.isHost === false', ng-click='room.toggleReady()') Toggle Ready
       div(ng-if='room.isStarted === true')
           button.btn.navbar-btn.btn-xl.btn-default(ng-disabled = 'room.isPaused !== false', ng-click = 'room.pause()') Pause
