@@ -1,4 +1,4 @@
-# What is 'Spybrawl' ?
+# What is 'Spy Brawl' ?
 
 Bla bla cool game - play it on a computer or phone...
 
