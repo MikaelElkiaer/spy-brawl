@@ -184,7 +184,14 @@ function roomModalController ($scope, theModal, socket, userService, roomId, use
 
   function accuse(user) {}
 
-  function guessLocation(location) {}
+  function guessLocation(location) {
+    socket.emit('guessLocation', {roomId, location}, (data, error) => {
+      if (error) {
+        theModal.dismiss(error);
+      }
+    });
+    theModal.close();
+  }
 }
 
 export { RoomController };
