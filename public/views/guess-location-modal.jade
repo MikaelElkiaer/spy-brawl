@@ -4,4 +4,4 @@
   .row
     .col-sm-12
       div(ng-repeat='location in locations')
-        button.list-group-item.active(ng-click='guessLocation({location: location})') {{location}}
+        button.list-group-item.active(ng-click='guessLocation(location)') {{location}}
