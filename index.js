@@ -214,6 +214,37 @@ io.on('connection', socket => {
     }
   });
 
+  socket.on('guessLocation', (data, callback) => {
+    if (users[socket.id].role !== 'Spy') {
+      callback(null, 'Only spies can attempt to guess the location');
+      return;
+    }
+
+    if (rooms[data.roomId].location === data.location){
+      io.to(socket.id).emit('user:gameover', {didWin: true,
+                                              condition: 'location',
+                                              guess: data.location,
+                                              actualLocation: rooms[data.roomId].location,
+                                              spy: users[socket.id].username});
+      socket.to(data.roomId).broadcast.emit('user:gameover', {didWin: false,
+                                                              condition: 'location',
+                                                              guess: data.location,
+                                                              actualLocation: rooms[data.roomId].location,
+                                                              spy: users[socket.id].username});
+    } else {
+      io.to(socket.id).emit('user:gameover', {didWin: false,
+                                              condition: 'location',
+                                              guess: data.location,
+                                              actualLocation: rooms[data.roomId].location,
+                                              spy: users[socket.id].username});
+      socket.to(data.roomId).broadcast.emit('user:gameover', {didWin: true,
+                                                              condition: 'location',
+                                                              guess: data.location,
+                                                              actualLocation: rooms[data.roomId].location,
+                                                              spy: users[socket.id].username});
+    }
+  });
+
   socket.on('toggleready', data => {
     var username = users[socket.id].username;
     var isReady = rooms[data.roomId].users[username];
