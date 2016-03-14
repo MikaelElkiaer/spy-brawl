@@ -148,6 +148,22 @@ class RoomController {
         keyboard: false
       });
     });
+
+    this.socket.on('user:gameover', data => {
+      this.gameOver = true;
+      this.didWin = data.didWin;
+      this.gameOverPanelClass = (this.didWin) ? 'panel-success' : 'panel-danger';
+      this.gameOverPanelTitle = (this.didWin) ? 'You Won' : 'You Lost';
+      if (data.condition === 'location') {
+        if (data.spy === this.userService.username) {
+          this.gameOverPanelBodyText = (this.didWin) ? data.guess + ' was correct! How did you know?' : 'Unfortunately ' + data.guess + ' was not it. Did you not get the hints? It was obviously ' + data.actualLocation;
+        } else {
+          this.gameOverPanelBodyText = (this.didWin) ? data.spy + ' thought it was ' + data.guess + ', what a dimwit!' : data.spy + ' correctly guessed the location. How could you just give it away like that?';
+        }
+      } else {
+        // Accusation gameover messages
+      }
+    });
   }
 }
 
