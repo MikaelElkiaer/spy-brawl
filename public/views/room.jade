@@ -30,3 +30,10 @@ div(pageslide='', ps-open='true', ps-side='bottom', ps-size='50px', style='backg
           button.btn.navbar-btn.btn-xl.btn-default(ng-disabled = 'room.isPaused !== false', ng-click = 'room.pause()') Pause
 div(pageslide='', ps-open='room.isPaused', ps-side='bottom', ps-size='50px', style='background-color:#f0ad4e')
   p.text-center {{room.pauseReason}}
+
+div(pageslide='', ps-open='room.gameOver === true', ps-side='bottom', ps-size='100px')
+      .panel(ng-class='room.gameOverPanelClass')
+        .panel-heading
+          h1.panel-title.text-center {{ room.gameOverPanelTitle }}
+        .panel-body.text-center
+          p {{ room.gameOverPanelBodyText }}
