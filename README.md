@@ -2,6 +2,8 @@
 
 Bla bla cool game - play it on a computer or phone...
 
+[![Dependency Status](https://david-dm.org/mikaelec/spy-brawl.svg)](https://david-dm.org/mikaelec/spy-brawl)
+
 ## How is this shit structured?
 Well, it ain't. But it uses `socket.io` and `express` to run a node.js web server with websockets communication.
 For the web-part, it uses ES6-compliant `angular` and `jade`.
