@@ -174,6 +174,15 @@ class RoomController {
         }
       } else {
         // Accusation gameover messages
+        if (data.spy === this.userService.username) {
+          this.gameOverPanelBodyText = (this.didWin) ? data.suspect + ' has been arrested for spying! Good job on not blowing your cover, but you should proabably get out of here soon.' : 'You have been compromised! Your days of spying are over!';
+        } else {
+          if (data.suspect === this.userService.username && !this.didWin) {
+            this.gameOverPanelBodyText = data.spy + ' laughs as you are being arrested for spying. How are they not seeing that he is the real spy?';
+          } else {
+            this.gameOverPanelBodyText = (this.didWin) ? data.spy + ' has been arrested for spying! Good job exposing him!' : data.suspect + ' has been arrested for spying! Minor thing though.. it was actually ' + data.spy + ' who was the real spy.';
+          }
+        }
       }
     });
   }
