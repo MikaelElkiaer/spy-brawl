@@ -246,6 +246,59 @@ io.on('connection', socket => {
     }
   });
 
+  socket.on('accuse', (data, callback) => {
+    rooms[data.roomId].votes = [];
+    io.in(data.roomId).clients((error, clients) => {
+      for (client in clients) {
+        if (users[clients[client]].username === data.user) {
+          rooms[data.roomId].suspect = clients[client];
+          io.to(clients[client]).emit('user:waitforvote', {suspect: data.user,
+                                                           accuser: users[socket.id].username});
+        } else {
+          io.to(clients[client]).emit('user:vote', {suspect: data.user,
+                                                    accuser: users[socket.id].username});
+        }
+      }
+    });
+  });
+
+  socket.on('vote', (data, callback) => {
+    io.to(data.roomId).emit('user:voteupdated', { user: users[socket.id].username });
+    callback(null);
+    rooms[data.roomId].votes.push(data.vote);
+
+    if (rooms[data.roomId].votes.length === Object.keys(rooms[data.roomId].users).length - 1) {
+      // Determine whether a majority of votes was yes or no
+      var yesCount = 0;
+      var noCount = 0;
+      for (var vote in rooms[data.roomId].votes) {
+        if (rooms[data.roomId].votes[vote] === 'yes'){
+          yesCount++;
+        } else {
+          noCount++;
+        }
+      }
+      if (yesCount > noCount) {
+        var suspect = rooms[data.roomId].suspect;
+        var isSuspectSpy = rooms[data.roomId].spy === suspect;
+
+        io.in(data.roomId).clients((error, clients) => {
+          for (client in clients) {
+            io.to(clients[client]).emit('user:gameover', {didWin: ((clients[client] !== suspect && isSuspectSpy) || (!isSuspectSpy && clients[client] === rooms[data.roomId].spy)),
+                                                          condition: 'accusation',
+                                                          suspect: users[suspect].username,
+                                                          spy: users[rooms[data.roomId].spy].username});
+          }
+        });
+      } else {
+        rooms[data.roomId].suspect = undefined;
+        io.in(data.roomId).emit('user:resume', undefined);
+        rooms[data.roomId].state = 'main';
+        rooms[data.roomId].timer.start();
+      }
+    }
+  });
+
   socket.on('toggleready', data => {
     var username = users[socket.id].username;
     var isReady = rooms[data.roomId].users[username];

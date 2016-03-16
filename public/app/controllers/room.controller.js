@@ -185,6 +185,15 @@ class RoomController {
         }
       }
     });
+
+    this.socket.on('user:waitforvote', data => {
+      this.pauseSliderClass = 'bg-warning';
+      this.pauseReason = data.accuser + ' accused you of being the spy! People are voting on it now..';
+    });
+
+    this.socket.on('user:vote', data => {
+      this.isVoting = true;
+    });
   }
 }
 
