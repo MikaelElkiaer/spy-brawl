@@ -57,6 +57,16 @@ class RoomController {
     });
   }
 
+  vote(vote) {
+    this.socket.emit('vote', {roomId: this.roomId, vote}, (data, error) => {
+      if (error) {
+        this.toastr.error(error);
+      } else {
+        this.isVoting = false;
+      }
+    });
+  }
+
   _setup(roomId) {
     this.log = angular.element(document.querySelector('#chatLog'));
 
@@ -103,6 +113,7 @@ class RoomController {
     // Players are waiting for the spy to select a location
     this.socket.on('user:waitforlocation', data => {
       this.isPaused = true;
+      this.pauseSliderClass = 'bg-warning';
       this.pauseReason = 'Waiting for ' + data.user + ' to select a location.';
     });
 
@@ -128,6 +139,7 @@ class RoomController {
     // Players are waiting for the player who paused to select a player
     this.socket.on('user:waitforaccusation', data => {
       this.isPaused = true;
+      this.pauseSliderClass = 'bg-info';
       this.pauseReason = 'Waiting for ' + data.user + ' to select a player';
     });
 
@@ -162,7 +174,29 @@ class RoomController {
         }
       } else {
         // Accusation gameover messages
+        if (data.spy === this.userService.username) {
+          this.gameOverPanelBodyText = (this.didWin) ? data.suspect + ' has been arrested for spying! Good job on not blowing your cover, but you should proabably get out of here soon.' : 'You have been compromised! Your days of spying are over!';
+        } else {
+          if (data.suspect === this.userService.username && !this.didWin) {
+            this.gameOverPanelBodyText = data.spy + ' laughs as you are being arrested for spying. How are they not seeing that he is the real spy?';
+          } else {
+            this.gameOverPanelBodyText = (this.didWin) ? data.spy + ' has been arrested for spying! Good job exposing him!' : data.suspect + ' has been arrested for spying! Minor thing though.. it was actually ' + data.spy + ' who was the real spy.';
+          }
+        }
       }
+    });
+
+    this.socket.on('user:waitforvote', data => {
+      this.pauseSliderClass = 'bg-warning';
+      this.pauseReason = data.accuser + ' accused you of being the spy! People are voting on it now..';
+    });
+
+    this.socket.on('user:vote', data => {
+      this.isVoting = true;
+    });
+
+    this.socket.on('user:resume', data => {
+      this.isPaused = false;
     });
   }
 }
@@ -198,7 +232,14 @@ function roomModalController ($scope, theModal, socket, userService, roomId, use
     theModal.close();
   }
 
-  function accuse(user) {}
+  function accuse(user) {
+    socket.emit('accuse', {roomId, user}, (data, error) => {
+      if (error) {
+        theModal.dismiss(error);
+      }
+    });
+    theModal.close();
+  }
 
   function guessLocation(location) {
     socket.emit('guessLocation', {roomId, location}, (data, error) => {
