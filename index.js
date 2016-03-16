@@ -162,6 +162,7 @@ io.on('connection', socket => {
           role = 'Spy';
           io.in(clientId).emit('user:role', {role: role,
                                              location: 'Unknown'});
+          rooms[data.roomId].spy = clientId;
         } else {
           role = roles.splice(roles.length * Math.random() << 0, 1)[0];
           io.in(clientId).emit('user:role', {role: role,
