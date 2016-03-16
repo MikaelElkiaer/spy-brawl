@@ -103,6 +103,7 @@ class RoomController {
     // Players are waiting for the spy to select a location
     this.socket.on('user:waitforlocation', data => {
       this.isPaused = true;
+      this.pauseSliderClass = 'bg-warning';
       this.pauseReason = 'Waiting for ' + data.user + ' to select a location.';
     });
 
@@ -128,6 +129,7 @@ class RoomController {
     // Players are waiting for the player who paused to select a player
     this.socket.on('user:waitforaccusation', data => {
       this.isPaused = true;
+      this.pauseSliderClass = 'bg-info';
       this.pauseReason = 'Waiting for ' + data.user + ' to select a player';
     });
 
