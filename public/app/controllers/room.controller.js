@@ -194,6 +194,10 @@ class RoomController {
     this.socket.on('user:vote', data => {
       this.isVoting = true;
     });
+
+    this.socket.on('user:resume', data => {
+      this.isPaused = false;
+    });
   }
 }
 
