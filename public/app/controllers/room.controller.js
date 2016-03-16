@@ -57,6 +57,16 @@ class RoomController {
     });
   }
 
+  vote(vote) {
+    this.socket.emit('vote', {roomId: this.roomId, vote}, (data, error) => {
+      if (error) {
+        this.toastr.error(error);
+      } else {
+        this.isVoting = false;
+      }
+    });
+  }
+
   _setup(roomId) {
     this.log = angular.element(document.querySelector('#chatLog'));
 

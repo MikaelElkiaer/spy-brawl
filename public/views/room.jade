@@ -31,6 +31,15 @@ div(pageslide='', ps-open='true', ps-side='bottom', ps-size='50px', style='backg
 div(pageslide='', ps-open='room.isPaused', ps-side='bottom', ps-size='50px', ng-class='room.pauseSliderClass')
   p.text-center {{room.pauseReason}}
 
+div(pageslide='', ps-open='room.isVoting === true', ps-side='bottom', ps-size='70px', class='bg-info')
+  .row
+    p.text-center Do you think {{ room.nominee }} is the spy?
+  .row
+    .col-xs-5.col-xs-offset-1.col-md-4.col-md-offset-2
+      button.btn.btn-default(style='width: 100%', ng-click="room.vote('yes')") Yes
+    .col-xs-5.col-md-4
+      button.btn.btn-default(style='width: 100%', ng-click="room.vote('no')") No
+
 div(pageslide='', ps-open='room.gameOver === true', ps-side='bottom', ps-size='100px')
       .panel(ng-class='room.gameOverPanelClass')
         .panel-heading
