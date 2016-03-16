@@ -28,7 +28,7 @@ div(pageslide='', ps-open='true', ps-side='bottom', ps-size='50px', style='backg
           button.btn.navbar-btn.btn-xl.btn-default(ng-if = 'room.isHost === false', ng-click='room.toggleReady()') Toggle Ready
       div(ng-if='room.isStarted === true')
           button.btn.navbar-btn.btn-xl.btn-default(ng-disabled = 'room.isPaused !== false', ng-click = 'room.pause()') Pause
-div(pageslide='', ps-open='room.isPaused', ps-side='bottom', ps-size='50px', style='background-color:#f0ad4e')
+div(pageslide='', ps-open='room.isPaused', ps-side='bottom', ps-size='50px', ng-class='room.pauseSliderClass')
   p.text-center {{room.pauseReason}}
 
 div(pageslide='', ps-open='room.gameOver === true', ps-side='bottom', ps-size='100px')
