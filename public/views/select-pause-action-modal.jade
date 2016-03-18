@@ -1,7 +1,12 @@
 .modal-header
   h3.modal-title Select Action
 .modal-footer
-  .col-xs-6
-    button.btn.btn-xs.btn-primary.i.fa.fa-user-secret(type='button', ng-click='selectAccuseAction()') Accuse Player
-  .col-xs-6
-    button.btn.btn-xs.btn-primary.i.fa.fa-map-signs(type='button', ng-click='selectGuessLocationAction()') Guess Location
+  .row
+    .col-xs-6
+      button.btn.btn-primary.btn-lg.btn-block(style='white-space: normal')
+        span.i.fa.fa-user-secret
+        |  Accuse Player
+    .col-xs-6
+      button.btn.btn-primary.btn-lg.btn-block(style='white-space: normal')
+        span.i.fa.fa-map-signs
+        |  Guess Location
