@@ -10,7 +10,7 @@
                       ng-class='{ "text-info": user === room.userService.username }', ng-repeat='(user, ready) in room.users')
                         i.fa.fa-user
                         | &nbsp;{{user}} - {{ user === room.host ? "Host" : "Ready: "+ready}}
-            .row
+            .row(ng-if='room.isStarted === true')
               .col-sm-12
                 .panel.panel-default
                   .panel-heading
