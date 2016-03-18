@@ -198,6 +198,11 @@ class RoomController {
     this.socket.on('user:resume', data => {
       this.isPaused = false;
     });
+
+    this.socket.on('user:role', data => {
+      this.userRole = data.role;
+      this.location = data.location;
+    });
   }
 }
 
