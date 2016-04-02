@@ -88,7 +88,7 @@ io.on('connection', socket => {
       return;
     }
     socket.join(data.roomId);
-    
+
     var isHost = (socket.id === rooms[data.roomId].host);
     rooms[data.roomId].users[users[socket.id].username] = isHost;
 
@@ -140,14 +140,14 @@ io.on('connection', socket => {
       callback(null, 'Only the host can start the game');
       return;
     }
-    
+
     for (var u in rooms[data.roomId].users) {
       if (!rooms[data.roomId].users[u]) {
         callback(u, 'Not all users are ready');
         return;
       }
     }
-    
+
     io.in(data.roomId).clients((error, clients) => {
       var locationKeys = Object.keys(locations);
       var location = locationKeys[locationKeys.length * Math.random() << 0];
@@ -186,7 +186,7 @@ io.on('connection', socket => {
                                                 endTime: rooms[data.roomId].endTime
                                               });
   });
-  
+
   socket.on('pause', (data, callback) => {
     var room = rooms[data.roomId];
 
@@ -249,7 +249,7 @@ io.on('connection', socket => {
   socket.on('accuse', (data, callback) => {
     rooms[data.roomId].votes = [];
     io.in(data.roomId).clients((error, clients) => {
-      for (client in clients) {
+      for (var client in clients) {
         if (users[clients[client]].username === data.user) {
           rooms[data.roomId].suspect = clients[client];
           io.to(clients[client]).emit('user:waitforvote', {suspect: data.user,
@@ -283,7 +283,7 @@ io.on('connection', socket => {
         var isSuspectSpy = rooms[data.roomId].spy === suspect;
 
         io.in(data.roomId).clients((error, clients) => {
-          for (client in clients) {
+          for (var client in clients) {
             io.to(clients[client]).emit('user:gameover', {didWin: ((clients[client] !== suspect && isSuspectSpy) || (!isSuspectSpy && clients[client] === rooms[data.roomId].spy)),
                                                           condition: 'accusation',
                                                           suspect: users[suspect].username,
