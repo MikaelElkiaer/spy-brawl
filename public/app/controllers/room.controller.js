@@ -28,7 +28,7 @@ class RoomController {
       }
     });
   }
-  
+
   pause(intent) {
     this.socket.emit('pause', { roomId: this.roomId, intent: intent }, (data, error) => {
       if (error) {
@@ -41,9 +41,9 @@ class RoomController {
               templateUrl: '/views/select-pause-action-modal',
               controller: roomModalController,
               resolve: {
-                roomId: () => {return this.roomId},
-                users: () => {return this.users},
-                locations: () => {return this.locations}
+                roomId: () => this.roomId,
+                users: () => this.users,
+                locations: () => this.locations
               }
           });
         }
@@ -78,7 +78,7 @@ class RoomController {
       else {
         this.users = data.users;
         this.isHost = data.isHost;
-        this.host = data.host
+        this.host = data.host;
       }
     });
 
@@ -98,7 +98,7 @@ class RoomController {
       this.users[data.newUsername] = this.users[data.oldUsername];
       delete this.users[data.oldUsername];
     });
-    
+
     this.socket.on('user:toggleready', data => {
       this.users[data.user] = data.isReady;
     });
