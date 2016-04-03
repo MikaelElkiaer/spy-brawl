@@ -20,6 +20,7 @@ class HomeController {
 
   _setup() {
     this.socket.emit('home', null, data => {
+      console.log(data.users);
       this.rooms = data.rooms;
       this.users = data.users;
     });
