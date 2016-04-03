@@ -1,7 +1,7 @@
 class Room {
-  constructor(UserCollection, host) {
-    this._userCollection = new UserCollection();
+  constructor(host, UserCollection) {
     this._host = host;
+    this._userCollection = new UserCollection();
   }
 
   get users() { return this._userCollection.users; }
