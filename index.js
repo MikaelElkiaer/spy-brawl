@@ -62,9 +62,7 @@ io.use((socket, next) => {
 io.on('connection', socket => {
   socket.clientIp = socket.request.connection.remoteAddress;
 
-  socket.broadcast.emit('user:connect', {
-    user: users.getUserById(socket.id).username
-  });
+  socket.broadcast.emit('user:connect', users.getUserById(socket.id).public);
 
   socket.on('conn', (data, callback) => {
     var user = users.getUserById(socket.id);
@@ -109,9 +107,7 @@ io.on('connection', socket => {
   });
 
   socket.on('disconnect', () => {
-    socket.broadcast.emit('user:disconnect', {
-        user: users.getUserById(socket.id).public
-    });
+    socket.broadcast.emit('user:disconnect', users.getUserById(socket.id).public);
 
     var username = users.getUserById(socket.id).username;
     Object.keys(rooms).forEach(x => {
