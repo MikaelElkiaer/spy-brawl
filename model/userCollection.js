@@ -3,17 +3,15 @@ class UserCollection {
     this._users = {};
   }
 
-  get users() { return Object.keys(this._users).map(k => {
-      var user = this._users[k];
-      return {
-        pid: user.pid,
-        username: user.username,
-        active: user.active
-      };
+  getAll(inactive) {
+    var result = {};
+    Object.keys(this._users).forEach(id => {
+      var user = this._users[id];
+      if (!inactive || user.active)
+        result[user.pid] = user.public;
     });
+    return result;
   }
-
-  get activeUsers() { return this.users.filter(u => u.active); }
 
   addUser(id, user) {
     if (!this._users[id])

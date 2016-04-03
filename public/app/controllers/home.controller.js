@@ -20,17 +20,16 @@ class HomeController {
 
   _setup() {
     this.socket.emit('home', null, data => {
-      console.log(data.users);
       this.rooms = data.rooms;
       this.users = data.users;
     });
 
     this.socket.on('user:connect', data => {
-      this.users.push(data.user);
+      this.users[data.pid] = data;
     });
 
     this.socket.on('user:disconnect', data => {
-      this.users.splice(this.users.indexOf(data.user));
+      delete this.users[data.pid];
     });
 
     this.socket.on('user:create-room', data => {
@@ -38,7 +37,7 @@ class HomeController {
     });
 
     this.socket.on('user:change-username', data => {
-      this.users[this.users.indexOf(data.oldUsername)] = data.newUsername;
+      this.users[data.pid].username = data.username;
     });
   }
 }

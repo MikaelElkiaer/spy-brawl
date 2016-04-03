@@ -75,7 +75,7 @@ io.on('connection', socket => {
 
   socket.on('home', (data, callback) => {
     callback({
-      users: users.users,
+      users: users.getAll(),
       rooms
     });
   });
@@ -109,7 +109,7 @@ io.on('connection', socket => {
 
   socket.on('disconnect', () => {
     socket.broadcast.emit('user:disconnect', {
-        user: users.getUserById(socket.id).username
+        user: users.getUserById(socket.id).public
     });
 
     var username = users.getUserById(socket.id).username;
@@ -313,7 +313,7 @@ io.on('connection', socket => {
     var oldUsername = user.username;
     var newUsername = data.newUsername;
     if (User.isValidUsername(newUsername)) {
-      users.username = newUsername;
+      user.username = newUsername;
       callback({ newUsername });
       io.emit('user:change-username', {
         pid: user.pid,

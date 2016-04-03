@@ -16,6 +16,8 @@ class User {
   get active() { return this._active; }
   set active(active) { this._active = active; }
 
+  get public() { return { pid: this.pid, username: this.username, active: this.active }; }
+
   static getNextUsername() {
     if (!this._nextUsernumber)
       this._nextUsernumber = 1;
