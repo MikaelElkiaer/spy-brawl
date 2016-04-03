@@ -6,6 +6,7 @@ var crypto = require('crypto');
 var Stopwatch = require('timer-stopwatch');
 var User = require('./model/user');
 var UserCollection = require('./model/userCollection');
+var IdGenerator = require('./model/idGenerator');
 
 app.set('port', (process.env.PORT || 5000));
 app.set('view engine', 'jade');
