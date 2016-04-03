@@ -2,8 +2,8 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var crypto = require('crypto');
 var Stopwatch = require('timer-stopwatch');
+
 var User = require('./model/user');
 var UserCollection = require('./model/userCollection');
 var Room = require('./model/room');
@@ -29,7 +29,7 @@ const DEFAULT_GAME_TIME = 8 * 60000; // 8 minutes in ms
 var rooms = {};
 var nextUsername = 1;
 var users = new UserCollection();
-var idGenerator = new IdGenerator(crypto);
+var idGenerator = new IdGenerator(require('crypto'));
 
 // TODO: We should probably figure out a better way to store the various
 //       locations and roles rather than directly in the code.
