@@ -7,7 +7,7 @@ class UserCollection {
     var result = {};
     Object.keys(this._users).forEach(id => {
       var user = this._users[id];
-      if (!inactive || user.active)
+      if (inactive || user.active)
         result[user.pid] = user.public;
     });
     return result;
