@@ -1,4 +1,6 @@
 function handle(io, socket, users, rooms, idGenerator, User) {
+  const ROOM_ID_SIZE = 5;
+
   socket.on('join', (data, callback) => {
     if (!rooms[data.roomId]) {
       callback(null, 'Room doesn\'t exist');
