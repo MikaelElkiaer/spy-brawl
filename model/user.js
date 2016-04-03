@@ -1,7 +1,7 @@
 class User {
-  constructor() {
-    this._sid = generateId();
-    this._pid = generateId();
+  constructor(idGenerator) {
+    this._sid = idGenerator.generate();
+    this._pid = idGenerator.generate();
     this._username = User.getNextUsername();
     this._active = true;
   }

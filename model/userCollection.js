@@ -3,7 +3,15 @@ class UserCollection {
     this._users = {};
   }
 
-  get users() { return Object.keys(this._users).map(k => this._users[k]); }
+  get users() { return Object.keys(this._users).map(k => {
+      var user = this._users[k];
+      return {
+        pid: user.pid,
+        username: user.username,
+        active: user.active
+      };
+    });
+  }
 
   get activeUsers() { return this.users.filter(u => u.active); }
 
@@ -21,12 +29,22 @@ class UserCollection {
       throw `User with id ${id} not in userCollection.`;
   }
 
+  changeId(sid, id) {
+    var user = this.getUserBySid(sid);
+    this._users[id] = this._users[user.id];
+    delete this._users[user.id];
+  }
+
+  getUserById(id) {
+    return this._users[id];
+  }
+
   getUserByPid(pid) {
       var ids = Object.keys(this._users);
       for (var i = 0; i < ids.length; i++) {
         var id = ids[i];
         if (this._users[id].pid === pid)
-          return this._users[id];
+          return { id, user: this._users[id] };
       }
       return undefined;
   }
@@ -35,8 +53,9 @@ class UserCollection {
       var ids = Object.keys(this._users);
       for (var i = 0; i < ids.length; i++) {
         var id = ids[i];
-        if (this._users[id].sid === sid)
-          return this._users[id];
+        if (this._users[id].sid === sid) {
+          return { id, user: this._users[id] };
+        }
       }
       return undefined;
   }
