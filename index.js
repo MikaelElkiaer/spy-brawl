@@ -309,14 +309,15 @@ io.on('connection', socket => {
   });
 
   socket.on('change-username', (data, callback) => {
-    var oldUsername = users[socket.id].username;
+    var user = users.getUserById(socket.id);
+    var oldUsername = user.username;
     var newUsername = data.newUsername;
-    if (_isValidUsername(newUsername)) {
-      users[socket.id].username = newUsername;
+    if (User.isValidUsername(newUsername)) {
+      users.username = newUsername;
       callback({ newUsername });
       io.emit('user:change-username', {
-        oldUsername,
-        newUsername
+        pid: user.pid,
+        username: user.username
       });
     }
   });
