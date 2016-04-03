@@ -42,4 +42,4 @@ class UserCollection {
   }
 }
 
-export { UserCollection };
+module.exports = UserCollection;
