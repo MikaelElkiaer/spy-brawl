@@ -1,4 +1,4 @@
-function handle(io, socket, users, rooms, idGenerator, User) {
+function handle(io, socket, users, rooms, idGenerator, User, Room) {
   socket.broadcast.emit('user:connect', users.getUserById(socket.id).public);
 
   socket.on('conn', (data, callback) => {

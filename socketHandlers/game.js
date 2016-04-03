@@ -1,4 +1,4 @@
-function handle(io, socket, users, rooms, idGenerator, User) {
+function handle(io, socket, users, rooms, idGenerator, User, Room) {
   const DEFAULT_GAME_TIME = 8 * 60000; // 8 minutes in ms
 
   socket.on('startgame', (data, callback) => {

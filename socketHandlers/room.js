@@ -1,4 +1,4 @@
-function handle(io, socket, users, rooms, idGenerator, User) {
+function handle(io, socket, users, rooms, idGenerator, User, Room) {
   const ROOM_ID_SIZE = 5;
 
   socket.on('join', (data, callback) => {
