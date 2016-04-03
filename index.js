@@ -322,25 +322,3 @@ io.on('connection', socket => {
 
 // start server
 http.listen(app.get('port'), () => console.log(`listening on *:${app.get('port')}`));
-
-function _createRoomId() {
-  return crypto.createHash('md5').update(new Date().toString()).digest('hex').substring(0, ROOM_ID_SIZE);
-}
-
-function findUserBySid(userSid) {
-  var socketIds = Object.keys(users);
-  for (var i = 0; i < socketIds.length; i++) {
-    var id = socketIds[i];
-    if (users[id].userSid === userSid)
-      return { userSid: id, userObj: users[id] };
-  }
-  return null;
-}
-
-function getNextUsername() {
-  return 'Guest ' + nextUsername++ % 100;
-}
-
-function _isValidUsername(username) {
-  return true;
-}
