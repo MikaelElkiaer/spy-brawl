@@ -27,7 +27,8 @@ const ROOM_ID_SIZE = 5;
 const DEFAULT_GAME_TIME = 8 * 60000; // 8 minutes in ms
 var rooms = {};
 var nextUsername = 1;
-var users = {};
+var users = new UserCollection();
+var idGenerator = new IdGenerator(crypto);
 
 // TODO: We should probably figure out a better way to store the various
 //       locations and roles rather than directly in the code.
@@ -43,22 +44,17 @@ var locations = {
   }
 };
 
+// create new user if needed, otherwise change id for existing user
 io.use((socket, next) => {
-  var userSid = socket.handshake.query.userSid;
-  if (!userSid || !findUserBySid(userSid)) {
-    var newUser = {
-      userSid: crypto.createHash('md5').update(new Date().toString()).digest('hex'),
-      username: getNextUsername(),
-      active: true
-    };
-    users[socket.id] = newUser;
-  }
+  var sid = socket.handshake.query.userSid;
+
+  if (!sid || !users.getUserBySid(sid))
+    users.addUser(socket.id, new User(idGenerator));
   else {
-    var oldUser = findUserBySid(userSid);
-    delete users[oldUser.userSid];
-    oldUser.userObj.active = true;
-    users[socket.id] = oldUser.userObj;
+    users.changeId(sid, socket.id);
+    users.getUserById(socket.id).active = true;
   }
+
   next();
 });
 
@@ -66,19 +62,20 @@ io.on('connection', socket => {
   socket.clientIp = socket.request.connection.remoteAddress;
 
   socket.broadcast.emit('user:connect', {
-    user: users[socket.id].username
+    user: users.getUserById(socket.id).username
   });
 
   socket.on('conn', (data, callback) => {
+    var user = users.getUserById(socket.id);
     callback({
-      userSid: users[socket.id].userSid,
-      username: users[socket.id].username
+      userSid: user.sid,
+      username: user.username
     });
   });
 
   socket.on('home', (data, callback) => {
     callback({
-      users: Object.keys(users).filter(x => users[x].active).map(x => users[x].username),
+      users: users.users,
       rooms
     });
   });
@@ -112,17 +109,17 @@ io.on('connection', socket => {
 
   socket.on('disconnect', () => {
     socket.broadcast.emit('user:disconnect', {
-        user: users[socket.id].username
+        user: users.getUserById(socket.id).username
     });
 
-    var username = users[socket.id].username;
+    var username = users.getUserById(socket.id).username;
     Object.keys(rooms).forEach(x => {
       var cur = rooms[x].users;
       if (cur[username] !== undefined)
         delete cur[username];
       });
 
-    users[socket.id].active = false;
+    users.getUserById(socket.id).active = false;
   });
 
   socket.on('create-room', (data, callback) => {
