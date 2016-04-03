@@ -14,6 +14,7 @@ var IdGenerator = require('./model/idGenerator');
 app.use(require('connect-livereload')({ port: 35729 }));
 
 // Setup of server and routes
+app.disable('view cache');
 app.set('port', (process.env.PORT || 5000));
 app.set('view engine', 'jade');
 app.use('/public', express.static('public'));
