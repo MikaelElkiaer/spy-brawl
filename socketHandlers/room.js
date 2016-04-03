@@ -2,25 +2,21 @@ function handle(io, socket, users, rooms, locations, idGenerator, User, Room) {
   const ROOM_ID_SIZE = 5;
 
   socket.on('join', (data, callback) => {
-    if (!rooms[data.roomId]) {
+    var room = rooms.getRoomById(data.roomId);
+    if (!room) {
       callback(null, 'Room doesn\'t exist');
       return;
     }
     socket.join(data.roomId);
 
-    var isHost = (socket.id === rooms[data.roomId].host);
-    rooms[data.roomId].users[users[socket.id].username] = isHost;
+    var user = users.getUserById(socket.id);
 
-    io.in(data.roomId).clients((error, clients) => {
-      callback({ isHost: isHost,
-                 host: users[rooms[data.roomId].host].username,
-                 users: rooms[data.roomId].users
-               });
-    });
+    if (!room.getUserById(socket.id))
+      room.addUser(socket.id, user);
 
-    socket.broadcast.to(data.roomId).emit('user:join', {
-      user: users[socket.id].username
-    });
+    callback(room.getAll());
+
+    socket.broadcast.to(data.roomId).emit('user:join', room.getUserById(socket.id));
   });
 
   socket.on('msg', (data, callback) => {
@@ -29,13 +25,10 @@ function handle(io, socket, users, rooms, locations, idGenerator, User, Room) {
   });
 
   socket.on('create-room', (data, callback) => {
-    var roomId = _createRoomId();
-    rooms[roomId] = {
-      host: socket.id,
-      users: {
-        [users[socket.id].username]: false
-      }
-    };
+    var user = users.getUserById(socket.id);
+    var roomId = idGenerator.generate(null, ROOM_ID_SIZE);
+
+    rooms.addRoom(roomId, new Room(socket.id, user));
     callback({ roomId });
   });
 }

@@ -7,9 +7,9 @@
                     h3.panel-title Users in room
                 .panel-body.text-center
                     span(style='margin: 0px 10px; display: inline-block;',
-                      ng-class='{ "text-info": user === room.userService.username }', ng-repeat='(user, ready) in room.users')
+                      ng-class='{ "text-info": user === room.userService.username }', ng-repeat='(pid, roomUser) in room.users')
                         i.fa.fa-user
-                        | &nbsp;{{user}} - {{ user === room.host ? "Host" : "Ready: "+ready}}
+                        | &nbsp;{{roomUser.user.username}} - {{ roomUser.host ? "Host" : "Ready: " + roomUser.ready}}
             .row(ng-if='room.isStarted === true')
               .col-sm-12
                 .panel.panel-default

@@ -3,7 +3,7 @@ class RoomCollection {
     this._rooms = {};
   }
 
-  get rooms() { return Object.keys(this._rooms).map(key => this._rooms[key]); }
+  get rooms() { return this._rooms; }
 
   addRoom(id, room) {
     if (!this._rooms[id])
@@ -18,6 +18,8 @@ class RoomCollection {
     else
       throw `Room with id ${id} not in roomCollection.`;
   }
+
+  getRoomById(id) { return this._rooms[id]; }
 }
 
 module.exports = RoomCollection;
