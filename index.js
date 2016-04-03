@@ -10,6 +10,8 @@ var Room = require('./model/room');
 var RoomCollection = require('./model/roomCollection');
 var IdGenerator = require('./model/idGenerator');
 
+var userHandler = require('./socketHandlers/user');
+
 // TODO Remove before deploying
 app.use(require('connect-livereload')({ port: 35729 }));
 
@@ -27,7 +29,6 @@ if (process.env.NPM_CONFIG_PRODUCTION === 'false')
 const ROOM_ID_SIZE = 5;
 const DEFAULT_GAME_TIME = 8 * 60000; // 8 minutes in ms
 var rooms = {};
-var nextUsername = 1;
 var users = new UserCollection();
 var idGenerator = new IdGenerator(require('crypto'));
 
@@ -60,22 +61,7 @@ io.use((socket, next) => {
 io.on('connection', socket => {
   socket.clientIp = socket.request.connection.remoteAddress;
 
-  socket.broadcast.emit('user:connect', users.getUserById(socket.id).public);
-
-  socket.on('conn', (data, callback) => {
-    var user = users.getUserById(socket.id);
-    callback({
-      userSid: user.sid,
-      username: user.username
-    });
-  });
-
-  socket.on('home', (data, callback) => {
-    callback({
-      users: users.getAll(),
-      rooms
-    });
-  });
+  userHandler(io, socket, users, User);
 
   socket.on('join', (data, callback) => {
     if (!rooms[data.roomId]) {
@@ -301,20 +287,6 @@ io.on('connection', socket => {
       user: username,
       isReady: isReady
     });
-  });
-
-  socket.on('change-username', (data, callback) => {
-    var user = users.getUserById(socket.id);
-    var oldUsername = user.username;
-    var newUsername = data.newUsername;
-    if (User.isValidUsername(newUsername)) {
-      user.username = newUsername;
-      callback({ newUsername });
-      io.emit('user:change-username', {
-        pid: user.pid,
-        username: user.username
-      });
-    }
   });
 });
 
