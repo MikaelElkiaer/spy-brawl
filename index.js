@@ -11,6 +11,7 @@ var RoomCollection = require('./model/roomCollection');
 var IdGenerator = require('./model/idGenerator');
 
 var userHandler = require('./socketHandlers/user');
+var roomHandler = require('./socketHandlers/room');
 
 // TODO Remove before deploying
 app.use(require('connect-livereload')({ port: 35729 }));
@@ -61,58 +62,8 @@ io.use((socket, next) => {
 io.on('connection', socket => {
   socket.clientIp = socket.request.connection.remoteAddress;
 
-  userHandler(io, socket, users, User);
-
-  socket.on('join', (data, callback) => {
-    if (!rooms[data.roomId]) {
-      callback(null, 'Room doesn\'t exist');
-      return;
-    }
-    socket.join(data.roomId);
-
-    var isHost = (socket.id === rooms[data.roomId].host);
-    rooms[data.roomId].users[users[socket.id].username] = isHost;
-
-    io.in(data.roomId).clients((error, clients) => {
-      callback({ isHost: isHost,
-                 host: users[rooms[data.roomId].host].username,
-                 users: rooms[data.roomId].users
-               });
-    });
-
-    socket.broadcast.to(data.roomId).emit('user:join', {
-      user: users[socket.id].username
-    });
-  });
-
-  socket.on('msg', (data, callback) => {
-    io.in(data.roomId).emit('user:msg', { chatMsg: data.chatMsg });
-    callback();
-  });
-
-  socket.on('disconnect', () => {
-    socket.broadcast.emit('user:disconnect', users.getUserById(socket.id).public);
-
-    var username = users.getUserById(socket.id).username;
-    Object.keys(rooms).forEach(x => {
-      var cur = rooms[x].users;
-      if (cur[username] !== undefined)
-        delete cur[username];
-      });
-
-    users.getUserById(socket.id).active = false;
-  });
-
-  socket.on('create-room', (data, callback) => {
-    var roomId = _createRoomId();
-    rooms[roomId] = {
-      host: socket.id,
-      users: {
-        [users[socket.id].username]: false
-      }
-    };
-    callback({ roomId });
-  });
+  userHandler(io, socket, users, rooms, idGenerator, User);
+  roomHandler(io, socket, users, rooms, idGenerator, User);
 
   socket.on('startgame', (data, callback) => {
     if (socket.id !== rooms[data.roomId].host) {
