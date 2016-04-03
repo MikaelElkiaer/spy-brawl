@@ -22,6 +22,10 @@ class User {
 
     return `Guest ${this._nextUsernumber++}`;
   }
+
+  static isValidUsername(username) {
+    return true;
+  }
 }
 
 module.exports = User;
