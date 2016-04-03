@@ -27,10 +27,13 @@ class UserCollection {
       throw `User with id ${id} not in userCollection.`;
   }
 
-  changeId(sid, id) {
+  changeId(sid, id, activate) {
     var user = this.getUserBySid(sid);
     this._users[id] = this._users[user.id];
     delete this._users[user.id];
+
+    if (activate)
+      this._users[id].active = true;
   }
 
   getUserById(id) {

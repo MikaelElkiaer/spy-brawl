@@ -51,10 +51,8 @@ io.use((socket, next) => {
 
   if (!sid || !users.getUserBySid(sid))
     users.addUser(socket.id, new User(idGenerator));
-  else {
-    users.changeId(sid, socket.id);
-    users.getUserById(socket.id).active = true;
-  }
+  else
+    users.changeId(sid, socket.id, true);
 
   next();
 });
