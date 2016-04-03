@@ -8,21 +8,18 @@ var User = require('./model/user');
 var UserCollection = require('./model/userCollection');
 var IdGenerator = require('./model/idGenerator');
 
+// TODO Remove before deploying
+app.use(require('connect-livereload')({ port: 35729 }));
+
+// Setup of server and routes
 app.set('port', (process.env.PORT || 5000));
 app.set('view engine', 'jade');
 app.use('/public', express.static('public'));
 app.use('/node_modules', express.static('node_modules'));
-
-if (!process.env.NPM_CONFIG_PRODUCTION)
+app.get('/', (req, res) => { res.render(`${__dirname}/public/index`); });
+app.get('/views/:name', (req, res) => { res.render(`${__dirname}/public/views/${req.params.name}`); });
+if (process.env.NPM_CONFIG_PRODUCTION === 'false')
   app.use(require('connect-livereload')({ port: 35729 }));
-
-app.get('/', (req, res) => {
-  res.render(`${__dirname}/public/index`);
-});
-
-app.get('/views/:name', (req, res) => {
-  res.render(`${__dirname}/public/views/${req.params.name}`);
-});
 
 const ROOM_ID_SIZE = 5;
 const DEFAULT_GAME_TIME = 8 * 60000; // 8 minutes in ms
@@ -326,9 +323,8 @@ io.on('connection', socket => {
   });
 });
 
-http.listen(app.get('port'), () => {
-  console.log(`listening on *:${app.get('port')}`);
-});
+// start server
+http.listen(app.get('port'), () => console.log(`listening on *:${app.get('port')}`));
 
 function _createRoomId() {
   return crypto.createHash('md5').update(new Date().toString()).digest('hex').substring(0, ROOM_ID_SIZE);
