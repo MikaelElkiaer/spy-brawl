@@ -6,6 +6,8 @@ var crypto = require('crypto');
 var Stopwatch = require('timer-stopwatch');
 var User = require('./model/user');
 var UserCollection = require('./model/userCollection');
+var Room = require('./model/room');
+var RoomCollection = require('./model/roomCollection');
 var IdGenerator = require('./model/idGenerator');
 
 // TODO Remove before deploying
