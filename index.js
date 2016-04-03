@@ -28,7 +28,7 @@ app.get('/views/:name', (req, res) => { res.render(`${__dirname}/public/views/${
 if (process.env.NPM_CONFIG_PRODUCTION === 'false')
   app.use(require('connect-livereload')({ port: 35729 }));
 
-var rooms = {};
+var rooms = new RoomCollection();
 var users = new UserCollection();
 var idGenerator = new IdGenerator(require('crypto'));
 

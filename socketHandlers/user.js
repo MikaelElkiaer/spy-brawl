@@ -10,31 +10,25 @@ function handle(io, socket, users, rooms, locations, idGenerator, User, Room) {
   });
 
   socket.on('disconnect', () => {
-    socket.broadcast.emit('user:disconnect', users.getUserById(socket.id).public);
-
-    var username = users.getUserById(socket.id).username;
-    Object.keys(rooms).forEach(x => {
-      var cur = rooms[x].users;
-      if (cur[username] !== undefined)
-        delete cur[username];
-      });
-
-    users.getUserById(socket.id).active = false;
+    var user = users.getUserById(socket.id);
+    user.active = false;
+    socket.broadcast.emit('user:disconnect', user.public);
   });
 
   socket.on('home', (data, callback) => {
-    callback({
-      users: users.getAll()
-    });
+    callback({ users: users.getAll() });
   });
 
   socket.on('change-username', (data, callback) => {
     var user = users.getUserById(socket.id);
     var oldUsername = user.username;
     var newUsername = data.newUsername;
+
     if (User.isValidUsername(newUsername)) {
       user.username = newUsername;
+
       callback({ newUsername });
+
       io.emit('user:change-username', {
         pid: user.pid,
         username: user.username
