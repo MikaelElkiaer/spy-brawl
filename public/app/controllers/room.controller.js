@@ -76,16 +76,17 @@ class RoomController {
         this.$state.go('home');
       }
       else {
+        console.log(users);
         this.users = users;
       }
     });
 
     this.socket.on('user:join', user => {
-      this.users[user.pid] = user;
+      this.users[user.user.pid] = user;
     });
 
     this.socket.on('user:disconnect', user => {
-      delete this.users[user.pid];
+      this.users[user.pid].user.active = false;
     });
 
     this.socket.on('user:msg', data => {

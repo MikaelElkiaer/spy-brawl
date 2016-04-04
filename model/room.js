@@ -24,7 +24,6 @@ class Room {
       var user = this.getUserById(id);
       result[user.user.pid] = user;
     });
-
     return result;
   }
 }
