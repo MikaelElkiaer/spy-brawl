@@ -1,28 +1,39 @@
+class RoomUser {
+  constructor(user, isHost) {
+    this._user = user;
+    this._ready = false;
+    this._isHost = isHost;
+  }
+
+  get public() {
+    return { user: this._user.public, ready: this._ready, isHost: this._isHost };
+  }
+}
+
 class Room {
   constructor(hostId, user) {
     this._users = {};
-    this._users[hostId] = { user: user, ready: false, host: true };
+    this._users[hostId] = new RoomUser(user, true);
   }
 
   get users() { return this._users; }
-  get host() { return this._host; }
 
-  addUser(id, user) { this._users[id] = { user: user, ready: false, host: false }; }
+  addUser(id, user, isHost) { this._users[id] = new RoomUser(user, isHost || false); }
   removeUser(id) { delete this._users[id]; }
 
   getUserById(id) {
-    var user = this._users[id];
-    if (!user)
-      return user;
+    var roomUser = this._users[id];
+    if (!roomUser)
+      return undefined;
 
-    return { user: user.user.public, ready: user.ready, host: user.host };
+    return roomUser.public;
   }
 
   getAll() {
     var result = {};
     Object.keys(this._users).forEach(id => {
-      var user = this.getUserById(id);
-      result[user.user.pid] = user;
+      var roomUser = this.getUserById(id);
+      result[roomUser.user.pid] = roomUser;
     });
     return result;
   }
