@@ -34,6 +34,8 @@ function handle(io, socket, users, rooms, locations, idGenerator, User, Room) {
         username: user.username
       });
     }
+    else
+      callback({ error: `The new username ${newUSername} is not allowed.`});
   });
 }
 
