@@ -6,8 +6,7 @@
   "main": "index.js",
   "version": "0.0.1",
   "scripts": {
-    "start": "gulp default",
-    "watch": "gulp watcher",
+    "start": "gulp server & gulp watcher",
     "test": "jshint ./"
   },
   "dependencies": {
@@ -29,6 +28,7 @@
   "devDependencies": {
     "connect-livereload": "^0.5.4",
     "gulp": "^3.9.0",
+    "gulp-develop-server": "0.5.1",
     "gulp-livereload": "^3.8.1",
     "jshint": "^2.9.1"
   }
