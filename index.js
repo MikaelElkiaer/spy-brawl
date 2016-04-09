@@ -6,8 +6,8 @@ var Stopwatch = require('timer-stopwatch');
 
 var User = require('./model/user').User;
 var UserCollection = require('./model/user').UserCollection;
-var Room = require('./model/room');
-var RoomCollection = require('./model/roomCollection');
+var Room = require('./model/room').Room;
+var RoomCollection = require('./model/room').RoomCollection;
 var IdGenerator = require('./model/idGenerator');
 
 var userHandler = require('./socketHandlers/user');
