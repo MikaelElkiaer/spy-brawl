@@ -59,8 +59,6 @@ io.use((socket, next) => {
 });
 
 io.on('connection', socket => {
-  socket.clientIp = socket.request.connection.remoteAddress;
-
   userHandler(io, socket, users, rooms, locations, idGenerator, User, Room);
   roomHandler(io, socket, users, rooms, locations, idGenerator, User, Room);
   gameHandler(io, socket, users, rooms, locations, idGenerator, User, Room);
