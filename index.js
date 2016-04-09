@@ -14,9 +14,6 @@ var userHandler = require('./socketHandlers/user');
 var roomHandler = require('./socketHandlers/room');
 var gameHandler = require('./socketHandlers/game');
 
-// TODO Remove before deploying
-app.use(require('connect-livereload')({ port: 35729 }));
-
 // Setup of server and routes
 app.disable('view cache');
 app.set('port', (process.env.PORT || 5000));
