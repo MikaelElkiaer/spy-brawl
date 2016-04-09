@@ -76,7 +76,6 @@ class RoomController {
         this.$state.go('home');
       }
       else {
-        console.log(users);
         this.users = users;
       }
     });
