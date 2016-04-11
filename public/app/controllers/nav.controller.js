@@ -1,5 +1,6 @@
 class NavController {
-  constructor($uibModal, toastr, userService) {
+  constructor($scope, $uibModal, toastr, userService) {
+    this.$scope = $scope;
     this.$modal = $uibModal;
     this.toastr = toastr;
     this.userService = userService;
@@ -27,7 +28,9 @@ class NavController {
   }
 
   _setup () {
-    this.username = this.userService.username;
+    this.$scope.$watch(() => this.userService.username, (oldVal, newVal) => {
+      this.username = this.userService.username;
+    });
   }
 }
 
@@ -47,5 +50,5 @@ function changeUsernameController ($scope, theModal, socket, username) {
   }
 }
 
-NavController.$inject = ['$uibModal', 'toastr', 'userService'];
+NavController.$inject = ['$scope', '$uibModal', 'toastr', 'userService'];
 export { NavController };

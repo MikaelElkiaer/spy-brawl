@@ -31,7 +31,7 @@ function handle(io, socket, users, rooms, locations, idGenerator, User, Room) {
 
       io.emit('user:change-username', {
         pid: user.pid,
-        username: user.username
+        username: newUsername
       });
     }
     else

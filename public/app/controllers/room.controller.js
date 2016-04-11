@@ -93,7 +93,7 @@ class RoomController {
     });
 
     this.socket.on('user:change-username', data => {
-      this.users[data.pid] = data.username;
+      this.users[data.pid].user.username = data.username;
     });
 
     this.socket.on('user:toggleready', data => {
