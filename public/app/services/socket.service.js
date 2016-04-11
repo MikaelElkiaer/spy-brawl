@@ -10,6 +10,7 @@ class SocketService {
 
     this.socket.emit('conn', null, data => {
       this.userService.userSid = data.userSid;
+      this.userService.userPid = data.userPid;
       this.userService.username = data.username;
     });
 

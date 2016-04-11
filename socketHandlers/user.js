@@ -5,6 +5,7 @@ function handle(io, socket, users, rooms, locations, idGenerator, User, Room) {
     var user = users.getUserById(socket.id);
     callback({
       userSid: user.sid,
+      userPid: user.pid,
       username: user.username
     });
   });
