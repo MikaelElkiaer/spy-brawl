@@ -124,9 +124,9 @@ class RoomController {
           templateUrl: '/views/guess-location-modal',
           controller: roomModalController,
           resolve: {
-            roomId: () => {return this.roomId},
-            users: () => {return this.users},
-            locations: () => {return this.locations}
+            roomId: () => this.roomId,
+            users: () => this.users,
+            locations: () => this.locations
           },
           backdrop: 'static',
           keyboard: false
@@ -149,9 +149,9 @@ class RoomController {
           templateUrl: '/views/accuse-modal',
           controller: roomModalController,
           resolve: {
-            roomId: () => {return this.roomId},
-            users: () => {return this.users},
-            locations: () => {return this.locations}
+            roomId: () => this.roomId,
+            users: () => this.users,
+            locations: () => this.locations
           },
         backdrop: 'static',
         keyboard: false
