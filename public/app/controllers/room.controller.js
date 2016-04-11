@@ -70,24 +70,22 @@ class RoomController {
   _setup(roomId) {
     this.log = angular.element(document.querySelector('#chatLog'));
 
-    this.socket.emit('join', { roomId }, (data, error) => {
+    this.socket.emit('join', { roomId }, (users, error) => {
       if (error) {
         this.toastr.error(error);
         this.$state.go('home');
       }
       else {
-        this.users = data.users;
-        this.isHost = data.isHost;
-        this.host = data.host;
+        this.users = users;
       }
     });
 
-    this.socket.on('user:join', data => {
-      this.users[data.user] = false;
+    this.socket.on('user:join', user => {
+      this.users[user.user.pid] = user;
     });
 
-    this.socket.on('user:disconnect', data => {
-      delete this.users[data.user];
+    this.socket.on('user:disconnect', user => {
+      this.users[user.pid].user.active = false;
     });
 
     this.socket.on('user:msg', data => {
@@ -95,8 +93,7 @@ class RoomController {
     });
 
     this.socket.on('user:change-username', data => {
-      this.users[data.newUsername] = this.users[data.oldUsername];
-      delete this.users[data.oldUsername];
+      this.users[data.pid].user.username = data.username;
     });
 
     this.socket.on('user:toggleready', data => {
@@ -127,9 +124,9 @@ class RoomController {
           templateUrl: '/views/guess-location-modal',
           controller: roomModalController,
           resolve: {
-            roomId: () => {return this.roomId},
-            users: () => {return this.users},
-            locations: () => {return this.locations}
+            roomId: () => this.roomId,
+            users: () => this.users,
+            locations: () => this.locations
           },
           backdrop: 'static',
           keyboard: false
@@ -152,9 +149,9 @@ class RoomController {
           templateUrl: '/views/accuse-modal',
           controller: roomModalController,
           resolve: {
-            roomId: () => {return this.roomId},
-            users: () => {return this.users},
-            locations: () => {return this.locations}
+            roomId: () => this.roomId,
+            users: () => this.users,
+            locations: () => this.locations
           },
         backdrop: 'static',
         keyboard: false

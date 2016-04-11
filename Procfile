@@ -1,1 +1,1 @@
-web: node index.js
+web: node --use_strict index.js
