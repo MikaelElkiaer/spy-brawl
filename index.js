@@ -22,7 +22,7 @@ app.use('/public', express.static('public'));
 app.use('/node_modules', express.static('node_modules'));
 app.get('/', (req, res) => { res.render(`${__dirname}/public/index`); });
 app.get('/views/:name', (req, res) => { res.render(`${__dirname}/public/views/${req.params.name}`); });
-if (process.env.NPM_CONFIG_PRODUCTION === 'false')
+if (!process.env.NPM_CONFIG_PRODUCTION)
   app.use(require('connect-livereload')({ port: 35729 }));
 
 var rooms = new RoomCollection();
