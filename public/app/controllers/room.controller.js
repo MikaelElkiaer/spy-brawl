@@ -97,7 +97,7 @@ class RoomController {
     });
 
     this.socket.on('user:toggleready', data => {
-      this.users[data.user] = data.isReady;
+      this.users[data.userPid].ready = data.isReady;
     });
 
     this.socket.on('user:startgame', data => {
