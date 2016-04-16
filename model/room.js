@@ -31,14 +31,14 @@ class Room {
     if (!roomUser)
       return undefined;
 
-    return roomUser.public;
+    return roomUser;
   }
 
   getAll() {
     var result = {};
     Object.keys(this._users).forEach(id => {
       var roomUser = this.getUserById(id);
-      result[roomUser.user.pid] = roomUser;
+      result[roomUser.user.pid] = roomUser.public;
     });
     return result;
   }

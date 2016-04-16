@@ -16,7 +16,7 @@ function handle(io, socket, users, rooms, idGenerator, User, Room) {
 
     callback(room.getAll());
 
-    socket.broadcast.to(data.roomId).emit('user:join', room.getUserById(socket.id));
+    socket.broadcast.to(data.roomId).emit('user:join', room.getUserById(socket.id).public);
   });
 
   socket.on('msg', (data, callback) => {
