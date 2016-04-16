@@ -11,7 +11,7 @@
                       ng-repeat='(pid, roomUser) in room.users')
                         i.fa.fa-user
                         | &nbsp;{{roomUser.user.username}} - {{ roomUser.host ? "Host" : "Ready: " + roomUser.ready}}
-            .row(ng-if='room.isStarted === true')
+            .row(ng-if='room.isStarted')
               .col-sm-12
                 .panel.panel-default
                   .panel-heading
@@ -37,15 +37,15 @@
 div(pageslide='', ps-open='true', ps-side='bottom', ps-size='50px', style='background-color: #333')
   .row
     .col-xs-2.col-xs-push-5
-      div(ng-if='room.isStarted !== true')
-          button.btn.navbar-btn.btn-xl.btn-default(ng-if = 'room.isHost === true', ng-click='room.startGame()') Start Game
-          button.btn.navbar-btn.btn-xl.btn-default(ng-if = 'room.isHost === false', ng-click='room.toggleReady()') Toggle Ready
-      div(ng-if='room.isStarted === true')
-          button.btn.navbar-btn.btn-xl.btn-default(ng-disabled = 'room.isPaused !== false', ng-click = 'room.pause()') Pause
+      div(ng-if='!room.isStarted')
+          button.btn.navbar-btn.btn-xl.btn-default(ng-if = 'room.isHost', ng-click='room.startGame()') Start Game
+          button.btn.navbar-btn.btn-xl.btn-default(ng-if = '!room.isHost', ng-click='room.toggleReady()') Toggle Ready
+      div(ng-if='room.isStarted')
+          button.btn.navbar-btn.btn-xl.btn-default(ng-disabled = 'room.isPaused', ng-click = 'room.pause()') Pause
 div(pageslide='', ps-open='room.isPaused', ps-side='bottom', ps-size='50px', ng-class='room.pauseSliderClass')
   p.text-center {{room.pauseReason}}
 
-div(pageslide='', ps-open='room.isVoting === true', ps-side='bottom', ps-size='70px', class='bg-info')
+div(pageslide='', ps-open='room.isVoting', ps-side='bottom', ps-size='70px', class='bg-info')
   .row
     p.text-center Do you think {{ room.nominee }} is the spy?
   .row
@@ -54,7 +54,7 @@ div(pageslide='', ps-open='room.isVoting === true', ps-side='bottom', ps-size='7
     .col-xs-5.col-md-4
       button.btn.btn-default(style='width: 100%', ng-click="room.vote('no')") No
 
-div(pageslide='', ps-open='room.gameOver === true', ps-side='bottom', ps-size='100px')
+div(pageslide='', ps-open='room.gameOver', ps-side='bottom', ps-size='100px')
       .panel(ng-class='room.gameOverPanelClass')
         .panel-heading
           h1.panel-title.text-center {{ room.gameOverPanelTitle }}
