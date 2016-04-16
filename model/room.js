@@ -5,6 +5,11 @@ class RoomUser {
     this._isHost = isHost;
   }
 
+  get user() { return this._user; }
+  get ready() { return this._ready; }
+  set ready(value) { this._ready = value; }
+  get isHost() { return this._isHost; }
+
   get public() {
     return { user: this._user.public, ready: this._ready, isHost: this._isHost };
   }
