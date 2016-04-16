@@ -1,5 +1,19 @@
-function handle(io, socket, users, rooms, locations, idGenerator, User, Room) {
+function handle(io, socket, users, rooms, idGenerator, User, Room) {
   const DEFAULT_GAME_TIME = 8 * 60000; // 8 minutes in ms
+
+  // TODO: We should probably figure out a better way to store the various
+  //       locations and roles rather than directly in the code.
+  var locations = {
+    airplane: {
+      roles: ['1st Class Passenger',
+              'Air Marshal',
+              'Mechanic',
+              'Coach Passenger',
+              'Flight Attendant',
+              'Co-Pilot',
+              'Captain']
+    }
+  };
 
   socket.on('startgame', (data, callback) => {
     if (socket.id !== rooms[data.roomId].host) {
@@ -166,12 +180,13 @@ function handle(io, socket, users, rooms, locations, idGenerator, User, Room) {
   });
 
   socket.on('toggleready', data => {
-    var username = users[socket.id].username;
-    var isReady = rooms[data.roomId].users[username];
-    isReady = !isReady;
-    rooms[data.roomId].users[users[socket.id].username] = isReady;
+    var room = rooms.getRoomById(data.roomId);
+    var user = room.getUserById(socket.id);
+    var isReady = !user.ready;
+    user.ready = isReady;
+
     io.in(data.roomId).emit('user:toggleready', {
-      user: username,
+      userPid: user.user.pid,
       isReady: isReady
     });
   });

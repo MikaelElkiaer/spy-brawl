@@ -5,6 +5,11 @@ class RoomUser {
     this._isHost = isHost;
   }
 
+  get user() { return this._user; }
+  get ready() { return this._ready; }
+  set ready(value) { this._ready = value; }
+  get isHost() { return this._isHost; }
+
   get public() {
     return { user: this._user.public, ready: this._ready, isHost: this._isHost };
   }
@@ -26,14 +31,14 @@ class Room {
     if (!roomUser)
       return undefined;
 
-    return roomUser.public;
+    return roomUser;
   }
 
   getAll() {
     var result = {};
     Object.keys(this._users).forEach(id => {
       var roomUser = this.getUserById(id);
-      result[roomUser.user.pid] = roomUser;
+      result[roomUser.user.pid] = roomUser.public;
     });
     return result;
   }

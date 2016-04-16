@@ -1,4 +1,4 @@
-function handle(io, socket, users, rooms, locations, idGenerator, User, Room) {
+function handle(io, socket, users, rooms, idGenerator, User, Room) {
   const ROOM_ID_SIZE = 5;
 
   socket.on('join', (data, callback) => {
@@ -16,7 +16,7 @@ function handle(io, socket, users, rooms, locations, idGenerator, User, Room) {
 
     callback(room.getAll());
 
-    socket.broadcast.to(data.roomId).emit('user:join', room.getUserById(socket.id));
+    socket.broadcast.to(data.roomId).emit('user:join', room.getUserById(socket.id).public);
   });
 
   socket.on('msg', (data, callback) => {
