@@ -10,10 +10,6 @@ var Room = require('./model/room').Room;
 var RoomCollection = require('./model/room').RoomCollection;
 var IdGenerator = require('./model/idGenerator');
 
-var userHandler = require('./socketHandlers/user');
-var roomHandler = require('./socketHandlers/room');
-var gameHandler = require('./socketHandlers/game');
-
 // Setup of server and routes
 app.disable('view cache');
 app.set('port', (process.env.PORT || 5000));
@@ -55,10 +51,11 @@ io.use((socket, next) => {
   next();
 });
 
+// fire up socket handlers
 io.on('connection', socket => {
-  userHandler(io, socket, users, rooms, locations, idGenerator, User, Room);
-  roomHandler(io, socket, users, rooms, locations, idGenerator, User, Room);
-  gameHandler(io, socket, users, rooms, locations, idGenerator, User, Room);
+  require('./socketHandlers/user')(io, socket, users, rooms, locations, idGenerator, User, Room);
+  require('./socketHandlers/room')(io, socket, users, rooms, locations, idGenerator, User, Room);
+  require('./socketHandlers/game')(io, socket, users, rooms, locations, idGenerator, User, Room);
 });
 
 // start server
