@@ -25,20 +25,6 @@ var rooms = new RoomCollection();
 var users = new UserCollection();
 var idGenerator = new IdGenerator(require('crypto'));
 
-// TODO: We should probably figure out a better way to store the various
-//       locations and roles rather than directly in the code.
-var locations = {
-  airplane: {
-    roles: ['1st Class Passenger',
-            'Air Marshal',
-            'Mechanic',
-            'Coach Passenger',
-            'Flight Attendant',
-            'Co-Pilot',
-            'Captain']
-  }
-};
-
 // create new user if needed, otherwise change id for existing user
 io.use((socket, next) => {
   var sid = socket.handshake.query.userSid;
@@ -53,9 +39,9 @@ io.use((socket, next) => {
 
 // fire up socket handlers
 io.on('connection', socket => {
-  require('./socketHandlers/user')(io, socket, users, rooms, locations, idGenerator, User, Room);
-  require('./socketHandlers/room')(io, socket, users, rooms, locations, idGenerator, User, Room);
-  require('./socketHandlers/game')(io, socket, users, rooms, locations, idGenerator, User, Room);
+  require('./socketHandlers/user')(io, socket, users, rooms, idGenerator, User, Room);
+  require('./socketHandlers/room')(io, socket, users, rooms, idGenerator, User, Room);
+  require('./socketHandlers/game')(io, socket, users, rooms, idGenerator, User, Room);
 });
 
 // start server
