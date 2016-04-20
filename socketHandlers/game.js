@@ -180,13 +180,14 @@ function handle(io, socket, users, rooms, idGenerator, User, Room) {
   });
 
   socket.on('toggleready', data => {
+    var user = users.getUserById(socket.id);
     var room = rooms.getRoomById(data.roomId);
-    var user = room.getUserById(socket.id);
-    var isReady = !user.ready;
-    user.ready = isReady;
+    var roomUser = room.getUserByPid(user.pid);
+    var isReady = !roomUser.ready;
+    roomUser.ready = isReady;
 
     io.in(data.roomId).emit('user:toggleready', {
-      userPid: user.user.pid,
+      userPid: roomUser.user.pid,
       isReady: isReady
     });
   });
