@@ -3,7 +3,7 @@
 class RoomUser {
   constructor(user, isHost) {
     this._user = user;
-    this._ready = false;
+    this._ready = isHost;
     this._isHost = isHost;
   }
 

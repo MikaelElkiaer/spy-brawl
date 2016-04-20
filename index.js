@@ -2,7 +2,6 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var Stopwatch = require('timer-stopwatch');
 
 var User = require('./model/user').User;
 var UserCollection = require('./model/user').UserCollection;
