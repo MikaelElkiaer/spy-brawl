@@ -12,7 +12,7 @@ gulp.task('watcher', cb => {
 });
 
 gulp.task('server', () => {
-  server.listen( { path: './index.js', execArgv: ['--use_strict'] } );
+  server.listen( { path: './index.js' } );
 
   return gulp.watch( [ './index.js', './model/**/*.js', './socketHandlers/**/*.js' ], server.restart );
 });

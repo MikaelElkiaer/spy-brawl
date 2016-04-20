@@ -1,3 +1,5 @@
+"use strict";
+
 class RoomUser {
   constructor(user, isHost) {
     this._user = user;
