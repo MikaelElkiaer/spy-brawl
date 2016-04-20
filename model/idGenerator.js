@@ -1,3 +1,5 @@
+"use strict";
+
 class IdGenerator {
   constructor(crypto) {
     this._crypto = crypto;

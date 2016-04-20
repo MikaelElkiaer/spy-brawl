@@ -1,3 +1,5 @@
+var Stopwatch = require('timer-stopwatch');
+
 function handle(io, socket, users, rooms, idGenerator, User, Room) {
   const DEFAULT_GAME_TIME = 8 * 60000; // 8 minutes in ms
 
@@ -16,14 +18,16 @@ function handle(io, socket, users, rooms, idGenerator, User, Room) {
   };
 
   socket.on('startgame', (data, callback) => {
-    if (socket.id !== rooms[data.roomId].host) {
+    var maybeHost = users.getUserById(socket.id);
+    var room = rooms.getRoomById(data.roomId);
+    if (!room.getUserByPid(maybeHost.pid).isHost) {
       callback(null, 'Only the host can start the game');
       return;
     }
 
-    for (var u in rooms[data.roomId].users) {
-      if (!rooms[data.roomId].users[u]) {
-        callback(u, 'Not all users are ready');
+    for (var pid in room._users) {
+      if (!room._users[pid].ready) {
+        callback(pid, 'Not all users are ready');
         return;
       }
     }
@@ -33,37 +37,38 @@ function handle(io, socket, users, rooms, idGenerator, User, Room) {
       var location = locationKeys[locationKeys.length * Math.random() << 0];
       var roles = JSON.parse(JSON.stringify(locations[location].roles));
       var role = '';
-      rooms[data.roomId].location = location;
+      room.location = location;
 
       var clientCount = clients.length;
       for (var i = 0; i < clientCount; i++) {
         var clientId = clients.splice(clients.length * Math.random() << 0, 1)[0];
+        var user = users.getUserById(clientId);
         if (i === 0) {
           role = 'Spy';
           io.in(clientId).emit('user:role', {role: role,
                                              location: 'Unknown'});
-          rooms[data.roomId].spy = clientId;
+          room.spy = user.pid;
         } else {
           role = roles.splice(roles.length * Math.random() << 0, 1)[0];
           io.in(clientId).emit('user:role', {role: role,
                                              location: location});
         }
-        users[clientId].role = role;
+        room.getUserByPid(user.pid).role = role;
       }
     });
 
-    rooms[data.roomId].startTime = new Date();
-    rooms[data.roomId].endTime = new Date(rooms[data.roomId].startTime.getTime() + 8*60000);
+    room.startTime = new Date();
+    room.endTime = new Date(room.startTime.getTime() + 8*60000);
     var timer = new Stopwatch(DEFAULT_GAME_TIME);
     timer.onDone( () => {
       // Game Over
     });
     timer.start();
-    rooms[data.roomId].timer = timer;
-    rooms[data.roomId].state = 'main';
+    room.timer = timer;
+    room.state = 'main';
 
-    io.to(data.roomId).emit('user:startgame', { startTime: rooms[data.roomId].startTime,
-                                                endTime: rooms[data.roomId].endTime
+    io.to(data.roomId).emit('user:startgame', { startTime: room.startTime,
+                                                endTime: room.endTime
                                               });
   });
 
@@ -180,13 +185,14 @@ function handle(io, socket, users, rooms, idGenerator, User, Room) {
   });
 
   socket.on('toggleready', data => {
+    var user = users.getUserById(socket.id);
     var room = rooms.getRoomById(data.roomId);
-    var user = room.getUserById(socket.id);
-    var isReady = !user.ready;
-    user.ready = isReady;
+    var roomUser = room.getUserByPid(user.pid);
+    var isReady = !roomUser.ready;
+    roomUser.ready = isReady;
 
     io.in(data.roomId).emit('user:toggleready', {
-      userPid: user.user.pid,
+      userPid: roomUser.user.pid,
       isReady: isReady
     });
   });

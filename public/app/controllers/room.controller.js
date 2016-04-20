@@ -77,6 +77,8 @@ class RoomController {
       }
       else {
         this.users = users;
+        if (this.users[this.userService.userPid].isHost)
+          this.isHost = true;
       }
     });
 

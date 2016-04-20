@@ -1,3 +1,5 @@
+"use strict";
+
 class User {
   constructor(idGenerator) {
     this._sid = idGenerator.generate();
