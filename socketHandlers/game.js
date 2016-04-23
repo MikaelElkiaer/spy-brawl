@@ -94,42 +94,46 @@ function handle(io, socket, users, rooms, idGenerator, User, Room) {
         callback(null, 'Only spies can attempt to guess the location');
         return;
       }
-      socket.to(data.roomId).broadcast.emit('user:waitforlocation', {user: user.username});
+      socket.to(data.roomId).broadcast.emit('user:waitforlocation', {userPid: user.pid});
       io.to(socket.id).emit('spy:guesslocation', {locations: Object.keys(locations)});
     } else {
-      socket.to(data.roomId).broadcast.emit('user:waitforaccusation', {user: user.username});
+      socket.to(data.roomId).broadcast.emit('user:waitforaccusation', {userPid: user.pid});
       io.to(socket.id).emit('user:accuse', null);
     }
   });
 
   socket.on('guessLocation', (data, callback) => {
-    if (users[socket.id].role !== 'Spy') {
+    var user = users.getUserById(socket.id);
+    var room = rooms.getRoomById(data.roomId);
+    var roomUser = room.getUserByPid(user.pid);
+
+    if (roomUser.role !== 'Spy') {
       callback(null, 'Only spies can attempt to guess the location');
       return;
     }
 
-    if (rooms[data.roomId].location === data.location){
+    if (room.location === data.location){
       io.to(socket.id).emit('user:gameover', {didWin: true,
                                               condition: 'location',
                                               guess: data.location,
-                                              actualLocation: rooms[data.roomId].location,
-                                              spy: users[socket.id].username});
+                                              actualLocation: room.location,
+                                              spyPid: user.pid});
       socket.to(data.roomId).broadcast.emit('user:gameover', {didWin: false,
                                                               condition: 'location',
                                                               guess: data.location,
-                                                              actualLocation: rooms[data.roomId].location,
-                                                              spy: users[socket.id].username});
+                                                              actualLocation: room.location,
+                                                              spyPid: user.pid});
     } else {
       io.to(socket.id).emit('user:gameover', {didWin: false,
                                               condition: 'location',
                                               guess: data.location,
-                                              actualLocation: rooms[data.roomId].location,
-                                              spy: users[socket.id].username});
+                                              actualLocation: room.location,
+                                              spyPid: user.pid});
       socket.to(data.roomId).broadcast.emit('user:gameover', {didWin: true,
                                                               condition: 'location',
                                                               guess: data.location,
-                                                              actualLocation: rooms[data.roomId].location,
-                                                              spy: users[socket.id].username});
+                                                              actualLocation: room.location,
+                                                              spyPid: user.pid});
     }
   });
 

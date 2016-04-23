@@ -113,7 +113,7 @@ class RoomController {
     this.socket.on('user:waitforlocation', data => {
       this.isPaused = true;
       this.pauseSliderClass = 'bg-warning';
-      this.pauseReason = 'Waiting for ' + data.user + ' to select a location.';
+      this.pauseReason = 'Waiting for ' + this.users[data.userPid].user.username + ' to select a location.';
     });
 
     // Spy is asked to select a location
@@ -139,7 +139,7 @@ class RoomController {
     this.socket.on('user:waitforaccusation', data => {
       this.isPaused = true;
       this.pauseSliderClass = 'bg-info';
-      this.pauseReason = 'Waiting for ' + data.user + ' to select a player';
+      this.pauseReason = 'Waiting for ' + this.users[data.userPid].user.username + ' to select a player';
     });
 
     // The player who paused is asked to select a player
@@ -166,20 +166,20 @@ class RoomController {
       this.gameOverPanelClass = (this.didWin) ? 'panel-success' : 'panel-danger';
       this.gameOverPanelTitle = (this.didWin) ? 'You Won' : 'You Lost';
       if (data.condition === 'location') {
-        if (data.spy === this.userService.username) {
+        if (data.spyPid === this.userService.userPid) {
           this.gameOverPanelBodyText = (this.didWin) ? data.guess + ' was correct! How did you know?' : 'Unfortunately ' + data.guess + ' was not it. Did you not get the hints? It was obviously ' + data.actualLocation;
         } else {
-          this.gameOverPanelBodyText = (this.didWin) ? data.spy + ' thought it was ' + data.guess + ', what a dimwit!' : data.spy + ' correctly guessed the location. How could you just give it away like that?';
+          this.gameOverPanelBodyText = (this.didWin) ? this.users[data.spyPid].user.username + ' thought it was ' + data.guess + ', what a dimwit!' : this.users[data.spyPid].user.username + ' correctly guessed the location. How could you just give it away like that?';
         }
       } else {
         // Accusation gameover messages
-        if (data.spy === this.userService.username) {
+        if (data.spyPid === this.userService.userPid) {
           this.gameOverPanelBodyText = (this.didWin) ? data.suspect + ' has been arrested for spying! Good job on not blowing your cover, but you should proabably get out of here soon.' : 'You have been compromised! Your days of spying are over!';
         } else {
           if (data.suspect === this.userService.username && !this.didWin) {
-            this.gameOverPanelBodyText = data.spy + ' laughs as you are being arrested for spying. How are they not seeing that he is the real spy?';
+            this.gameOverPanelBodyText = this.users[data.spyPid].user.username + ' laughs as you are being arrested for spying. How are they not seeing that he is the real spy?';
           } else {
-            this.gameOverPanelBodyText = (this.didWin) ? data.spy + ' has been arrested for spying! Good job exposing him!' : data.suspect + ' has been arrested for spying! Minor thing though.. it was actually ' + data.spy + ' who was the real spy.';
+            this.gameOverPanelBodyText = (this.didWin) ? this.users[data.spyPid].user.username + ' has been arrested for spying! Good job exposing him!' : data.suspect + ' has been arrested for spying! Minor thing though.. it was actually ' + this.users[data.spyPid].user.username + ' who was the real spy.';
           }
         }
       }
