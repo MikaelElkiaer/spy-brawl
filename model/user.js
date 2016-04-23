@@ -1,7 +1,11 @@
 "use strict";
 
+var Room = require('./room').Room;
+var IdGenerator = require('./idGenerator');
+var idGenerator = new IdGenerator(require('crypto'));
+
 class User {
-  constructor(idGenerator) {
+  constructor() {
     this._sid = idGenerator.generate();
     this._pid = idGenerator.generate();
     this._username = User.getNextUsername();

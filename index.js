@@ -5,9 +5,7 @@ var io = require('socket.io')(http);
 
 var User = require('./model/user').User;
 var UserCollection = require('./model/user').UserCollection;
-var Room = require('./model/room').Room;
 var RoomCollection = require('./model/room').RoomCollection;
-var IdGenerator = require('./model/idGenerator');
 
 // Setup of server and routes
 app.disable('view cache');
@@ -22,14 +20,13 @@ if (!process.env.NPM_CONFIG_PRODUCTION)
 
 var rooms = new RoomCollection();
 var users = new UserCollection();
-var idGenerator = new IdGenerator(require('crypto'));
 
 // create new user if needed, otherwise change id for existing user
 io.use((socket, next) => {
   var sid = socket.handshake.query.userSid;
 
   if (!sid || !users.getUserBySid(sid))
-    users.addUser(socket.id, new User(idGenerator));
+    users.addUser(socket.id, new User());
   else
     users.changeId(sid, socket.id, true);
 
@@ -38,9 +35,9 @@ io.use((socket, next) => {
 
 // fire up socket handlers
 io.on('connection', socket => {
-  require('./socketHandlers/user')(io, socket, users, rooms, idGenerator, User, Room);
-  require('./socketHandlers/room')(io, socket, users, rooms, idGenerator, User, Room);
-  require('./socketHandlers/game')(io, socket, users, rooms, idGenerator, User, Room);
+  require('./socketHandlers/user')(io, socket, users, rooms);
+  require('./socketHandlers/room')(io, socket, users, rooms);
+  require('./socketHandlers/game')(io, socket, users, rooms);
 });
 
 // start server

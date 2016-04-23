@@ -1,4 +1,6 @@
-function handle(io, socket, users, rooms, idGenerator, User, Room) {
+var User = require('../model/user').User;
+
+function handle(io, socket, users, rooms) {
   socket.broadcast.emit('user:connect', users.getUserById(socket.id).public);
 
   socket.on('conn', (data, callback) => {

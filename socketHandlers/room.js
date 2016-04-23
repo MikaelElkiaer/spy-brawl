@@ -1,4 +1,8 @@
-function handle(io, socket, users, rooms, idGenerator, User, Room) {
+var Room = require('../model/room').Room;
+var IdGenerator = require('../model/idGenerator');
+var idGenerator = new IdGenerator(require('crypto'));
+
+function handle(io, socket, users, rooms) {
   const ROOM_ID_SIZE = 5;
 
   socket.on('join', (data, callback) => {

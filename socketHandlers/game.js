@@ -1,6 +1,6 @@
 var Stopwatch = require('timer-stopwatch');
 
-function handle(io, socket, users, rooms, idGenerator, User, Room) {
+function handle(io, socket, users, rooms) {
   const DEFAULT_GAME_TIME = 8 * 60000; // 8 minutes in ms
 
   // TODO: We should probably figure out a better way to store the various
