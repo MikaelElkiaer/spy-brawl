@@ -73,14 +73,16 @@ function handle(io, socket, users, rooms, idGenerator, User, Room) {
   });
 
   socket.on('pause', (data, callback) => {
-    var room = rooms[data.roomId];
+    var user = users.getUserById(socket.id);
+    var room = rooms.getRoomById(data.roomId);
+    var roomUser = room.getUserByPid(user.pid);
 
     if (room.state !== 'main') {
       callback(null, 'Cannot pause at this time');
       return;
     }
 
-    if (users[socket.id].role === 'Spy' && !data.intent) {
+    if (roomUser.role === 'Spy' && !data.intent) {
       callback({ isSpy: true });
       return;
     }
@@ -88,14 +90,14 @@ function handle(io, socket, users, rooms, idGenerator, User, Room) {
     room.state = 'paused';
 
     if (data.intent === 'guessLocation') {
-      if (users[socket.id].role !== 'Spy') {
+      if (roomUser.role !== 'Spy') {
         callback(null, 'Only spies can attempt to guess the location');
         return;
       }
-      socket.to(data.roomId).broadcast.emit('user:waitforlocation', {user: users[socket.id].username});
+      socket.to(data.roomId).broadcast.emit('user:waitforlocation', {user: user.username});
       io.to(socket.id).emit('spy:guesslocation', {locations: Object.keys(locations)});
     } else {
-      socket.to(data.roomId).broadcast.emit('user:waitforaccusation', {user: users[socket.id].username});
+      socket.to(data.roomId).broadcast.emit('user:waitforaccusation', {user: user.username});
       io.to(socket.id).emit('user:accuse', null);
     }
   });
