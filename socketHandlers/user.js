@@ -27,10 +27,10 @@ function handle(io, socket, users, rooms) {
     var oldUsername = user.username;
     var newUsername = data.newUsername;
 
-    if (User.isValidUsername(newUsername)) {
+    if (User.isValidUsername(newUsername, users)) {
       user.username = newUsername;
 
-      callback({ newUsername });
+      callback(null, { newUsername });
 
       io.emit('user:change-username', {
         pid: user.pid,
@@ -38,7 +38,7 @@ function handle(io, socket, users, rooms) {
       });
     }
     else
-      callback({ error: `The new username ${newUSername} is not allowed.`});
+      callback(`The new username ${newUsername} is not allowed.`);
   });
 }
 

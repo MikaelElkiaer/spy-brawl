@@ -28,10 +28,19 @@ class User {
     if (!this._nextUsernumber)
       this._nextUsernumber = 1;
 
-    return `Guest ${this._nextUsernumber++}`;
+    return `guest${this._nextUsernumber++}`;
   }
 
-  static isValidUsername(username) {
+  static isValidUsername(username, users) {
+    var regex = /^\w{2,12}$/;
+    if (!regex.test(username))
+      return false;
+
+    var ids = Object.keys(users);
+    for (var i = 0; i < ids.length; i++)
+      if (users[ids[i]].username === username)
+        return false;
+
     return true;
   }
 }

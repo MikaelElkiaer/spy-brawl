@@ -41,7 +41,7 @@ function changeUsernameController ($scope, theModal, socket, username) {
   $scope.cancel = () => { theModal.dismiss('cancel'); };
 
   function save() {
-    socket.emit('change-username', { newUsername: $scope.newUsername }, (data, error) => {
+    socket.emit('change-username', { newUsername: $scope.newUsername }, (error, data) => {
       if (error)
         theModal.dismiss('error');
       else
