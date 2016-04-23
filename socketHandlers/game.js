@@ -73,14 +73,16 @@ function handle(io, socket, users, rooms, idGenerator, User, Room) {
   });
 
   socket.on('pause', (data, callback) => {
-    var room = rooms[data.roomId];
+    var user = users.getUserById(socket.id);
+    var room = rooms.getRoomById(data.roomId);
+    var roomUser = room.getUserByPid(user.pid);
 
     if (room.state !== 'main') {
       callback(null, 'Cannot pause at this time');
       return;
     }
 
-    if (users[socket.id].role === 'Spy' && !data.intent) {
+    if (roomUser.role === 'Spy' && !data.intent) {
       callback({ isSpy: true });
       return;
     }
@@ -88,98 +90,112 @@ function handle(io, socket, users, rooms, idGenerator, User, Room) {
     room.state = 'paused';
 
     if (data.intent === 'guessLocation') {
-      if (users[socket.id].role !== 'Spy') {
+      if (roomUser.role !== 'Spy') {
         callback(null, 'Only spies can attempt to guess the location');
         return;
       }
-      socket.to(data.roomId).broadcast.emit('user:waitforlocation', {user: users[socket.id].username});
+      socket.to(data.roomId).broadcast.emit('user:waitforlocation', {userPid: user.pid});
       io.to(socket.id).emit('spy:guesslocation', {locations: Object.keys(locations)});
     } else {
-      socket.to(data.roomId).broadcast.emit('user:waitforaccusation', {user: users[socket.id].username});
+      socket.to(data.roomId).broadcast.emit('user:waitforaccusation', {userPid: user.pid});
       io.to(socket.id).emit('user:accuse', null);
     }
   });
 
   socket.on('guessLocation', (data, callback) => {
-    if (users[socket.id].role !== 'Spy') {
+    var user = users.getUserById(socket.id);
+    var room = rooms.getRoomById(data.roomId);
+    var roomUser = room.getUserByPid(user.pid);
+
+    if (roomUser.role !== 'Spy') {
       callback(null, 'Only spies can attempt to guess the location');
       return;
     }
 
-    if (rooms[data.roomId].location === data.location){
+    if (room.location === data.location){
       io.to(socket.id).emit('user:gameover', {didWin: true,
                                               condition: 'location',
                                               guess: data.location,
-                                              actualLocation: rooms[data.roomId].location,
-                                              spy: users[socket.id].username});
+                                              actualLocation: room.location,
+                                              spyPid: user.pid});
       socket.to(data.roomId).broadcast.emit('user:gameover', {didWin: false,
                                                               condition: 'location',
                                                               guess: data.location,
-                                                              actualLocation: rooms[data.roomId].location,
-                                                              spy: users[socket.id].username});
+                                                              actualLocation: room.location,
+                                                              spyPid: user.pid});
     } else {
       io.to(socket.id).emit('user:gameover', {didWin: false,
                                               condition: 'location',
                                               guess: data.location,
-                                              actualLocation: rooms[data.roomId].location,
-                                              spy: users[socket.id].username});
+                                              actualLocation: room.location,
+                                              spyPid: user.pid});
       socket.to(data.roomId).broadcast.emit('user:gameover', {didWin: true,
                                                               condition: 'location',
                                                               guess: data.location,
-                                                              actualLocation: rooms[data.roomId].location,
-                                                              spy: users[socket.id].username});
+                                                              actualLocation: room.location,
+                                                              spyPid: user.pid});
     }
   });
 
   socket.on('accuse', (data, callback) => {
-    rooms[data.roomId].votes = [];
+    var user = users.getUserById(socket.id);
+    var room = rooms.getRoomById(data.roomId);
+    var roomUser = room.getUserByPid(user.pid);
+
+    room.votes = [];
     io.in(data.roomId).clients((error, clients) => {
       for (var client in clients) {
-        if (users[clients[client]].username === data.user) {
-          rooms[data.roomId].suspect = clients[client];
-          io.to(clients[client]).emit('user:waitforvote', {suspect: data.user,
-                                                           accuser: users[socket.id].username});
+        var u = users.getUserById(clients[client]);
+        if (u.pid === data.userPid) {
+          room.suspect = u;
+          io.to(clients[client]).emit('user:waitforvote', {suspectPid: data.userPid,
+                                                           accuserPid: user.pid});
         } else {
-          io.to(clients[client]).emit('user:vote', {suspect: data.user,
-                                                    accuser: users[socket.id].username});
+          io.to(clients[client]).emit('user:vote', {suspectPid: data.userPid,
+                                                    accuserPid: user.pid});
         }
       }
     });
   });
 
   socket.on('vote', (data, callback) => {
-    io.to(data.roomId).emit('user:voteupdated', { user: users[socket.id].username });
-    callback(null);
-    rooms[data.roomId].votes.push(data.vote);
+    var user = users.getUserById(socket.id);
+    var room = rooms.getRoomById(data.roomId);
+    var roomUser = room.getUserByPid(user.pid);
 
-    if (rooms[data.roomId].votes.length === Object.keys(rooms[data.roomId].users).length - 1) {
+    // TODO doesn't seem like the following is implemented frontend: io.to(data.roomId).emit('user:voteupdated', { user: users[socket.id].username });
+    callback(null);
+    room.votes.push(data.vote);
+
+    if (room.votes.length === Object.keys(room._users).length - 1) {
       // Determine whether a majority of votes was yes or no
       var yesCount = 0;
       var noCount = 0;
-      for (var vote in rooms[data.roomId].votes) {
-        if (rooms[data.roomId].votes[vote] === 'yes'){
+      for (var vote in room.votes) {
+        if (room.votes[vote] === 'yes'){
           yesCount++;
         } else {
           noCount++;
         }
       }
       if (yesCount > noCount) {
-        var suspect = rooms[data.roomId].suspect;
-        var isSuspectSpy = rooms[data.roomId].spy === suspect;
+        var suspect = room.suspect;
+        var isSuspectSpy = room.spy === suspect.pid;
 
         io.in(data.roomId).clients((error, clients) => {
           for (var client in clients) {
-            io.to(clients[client]).emit('user:gameover', {didWin: ((clients[client] !== suspect && isSuspectSpy) || (!isSuspectSpy && clients[client] === rooms[data.roomId].spy)),
+            var u = users.getUserById(clients[client]);
+            io.to(clients[client]).emit('user:gameover', {didWin: ((u.pid !== suspect.pid && isSuspectSpy) || (!isSuspectSpy && u.pid === room.spy)),
                                                           condition: 'accusation',
-                                                          suspect: users[suspect].username,
-                                                          spy: users[rooms[data.roomId].spy].username});
+                                                          suspectPid: user.pid,
+                                                          spyPid: room.spy});
           }
         });
       } else {
-        rooms[data.roomId].suspect = undefined;
+        room.suspect = undefined;
         io.in(data.roomId).emit('user:resume', undefined);
-        rooms[data.roomId].state = 'main';
-        rooms[data.roomId].timer.start();
+        room.state = 'main';
+        room.timer.start();
       }
     }
   });

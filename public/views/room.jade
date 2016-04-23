@@ -47,7 +47,7 @@ div(pageslide='', ps-open='room.isPaused', ps-side='bottom', ps-size='50px', ng-
 
 div(pageslide='', ps-open='room.isVoting', ps-side='bottom', ps-size='70px', class='bg-info')
   .row
-    p.text-center Do you think {{ room.nominee }} is the spy?
+    p.text-center Do you think {{ room.nominee.user.username }} is the spy?
   .row
     .col-xs-5.col-xs-offset-1.col-md-4.col-md-offset-2
       button.btn.btn-default(style='width: 100%', ng-click="room.vote('yes')") Yes

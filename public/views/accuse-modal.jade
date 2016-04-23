@@ -3,5 +3,5 @@
 .modal-body
   .row
     .col-sm-12
-      div(ng-repeat='(user, ready) in users')
-        button.list-group-item.active(ng-if='userService.username !== user', ng-click='accuse(user)') {{user}}
+      div(ng-repeat='u in users')
+        button.list-group-item.active(ng-if='userService.userPid !== u.user.pid', ng-click='accuse(u.user.pid)') {{u.user.username}}
