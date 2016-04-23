@@ -138,16 +138,21 @@ function handle(io, socket, users, rooms, idGenerator, User, Room) {
   });
 
   socket.on('accuse', (data, callback) => {
-    rooms[data.roomId].votes = [];
+    var user = users.getUserById(socket.id);
+    var room = rooms.getRoomById(data.roomId);
+    var roomUser = room.getUserByPid(user.pid);
+
+    room.votes = [];
     io.in(data.roomId).clients((error, clients) => {
       for (var client in clients) {
-        if (users[clients[client]].username === data.user) {
-          rooms[data.roomId].suspect = clients[client];
-          io.to(clients[client]).emit('user:waitforvote', {suspect: data.user,
-                                                           accuser: users[socket.id].username});
+        var u = users.getUserById(clients[client]);
+        if (u.pid === data.userPid) {
+          room.suspect = u;
+          io.to(clients[client]).emit('user:waitforvote', {suspectPid: data.userPid,
+                                                           accuserPid: user.pid});
         } else {
-          io.to(clients[client]).emit('user:vote', {suspect: data.user,
-                                                    accuser: users[socket.id].username});
+          io.to(clients[client]).emit('user:vote', {suspectPid: data.userPid,
+                                                    accuserPid: user.pid});
         }
       }
     });

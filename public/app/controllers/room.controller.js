@@ -187,10 +187,11 @@ class RoomController {
 
     this.socket.on('user:waitforvote', data => {
       this.pauseSliderClass = 'bg-warning';
-      this.pauseReason = data.accuser + ' accused you of being the spy! People are voting on it now..';
+      this.pauseReason = this.users[data.accuserPid].user.username + ' accused you of being the spy! People are voting on it now..';
     });
 
     this.socket.on('user:vote', data => {
+      this.nominee = this.users[data.suspectPid];
       this.isVoting = true;
     });
 
@@ -236,8 +237,8 @@ function roomModalController ($scope, theModal, socket, userService, roomId, use
     theModal.close();
   }
 
-  function accuse(user) {
-    socket.emit('accuse', {roomId, user}, (data, error) => {
+  function accuse(userPid) {
+    socket.emit('accuse', {roomId, userPid}, (data, error) => {
       if (error) {
         theModal.dismiss(error);
       }
