@@ -159,38 +159,43 @@ function handle(io, socket, users, rooms, idGenerator, User, Room) {
   });
 
   socket.on('vote', (data, callback) => {
-    io.to(data.roomId).emit('user:voteupdated', { user: users[socket.id].username });
-    callback(null);
-    rooms[data.roomId].votes.push(data.vote);
+    var user = users.getUserById(socket.id);
+    var room = rooms.getRoomById(data.roomId);
+    var roomUser = room.getUserByPid(user.pid);
 
-    if (rooms[data.roomId].votes.length === Object.keys(rooms[data.roomId].users).length - 1) {
+    // TODO doesn't seem like the following is implemented frontend: io.to(data.roomId).emit('user:voteupdated', { user: users[socket.id].username });
+    callback(null);
+    room.votes.push(data.vote);
+
+    if (room.votes.length === Object.keys(room._users).length - 1) {
       // Determine whether a majority of votes was yes or no
       var yesCount = 0;
       var noCount = 0;
-      for (var vote in rooms[data.roomId].votes) {
-        if (rooms[data.roomId].votes[vote] === 'yes'){
+      for (var vote in room.votes) {
+        if (room.votes[vote] === 'yes'){
           yesCount++;
         } else {
           noCount++;
         }
       }
       if (yesCount > noCount) {
-        var suspect = rooms[data.roomId].suspect;
-        var isSuspectSpy = rooms[data.roomId].spy === suspect;
+        var suspect = room.suspect;
+        var isSuspectSpy = room.spy === suspect.pid;
 
         io.in(data.roomId).clients((error, clients) => {
           for (var client in clients) {
-            io.to(clients[client]).emit('user:gameover', {didWin: ((clients[client] !== suspect && isSuspectSpy) || (!isSuspectSpy && clients[client] === rooms[data.roomId].spy)),
+            var u = users.getUserById(clients[client]);
+            io.to(clients[client]).emit('user:gameover', {didWin: ((u.pid !== suspect.pid && isSuspectSpy) || (!isSuspectSpy && u.pid === room.spy)),
                                                           condition: 'accusation',
-                                                          suspect: users[suspect].username,
-                                                          spy: users[rooms[data.roomId].spy].username});
+                                                          suspectPid: user.pid,
+                                                          spyPid: room.spy});
           }
         });
       } else {
-        rooms[data.roomId].suspect = undefined;
+        room.suspect = undefined;
         io.in(data.roomId).emit('user:resume', undefined);
-        rooms[data.roomId].state = 'main';
-        rooms[data.roomId].timer.start();
+        room.state = 'main';
+        room.timer.start();
       }
     }
   });
