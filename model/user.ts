@@ -1,10 +1,13 @@
-"use strict";
-
-var Room = require('./room').Room;
-var IdGenerator = require('./idGenerator');
+import { IdGenerator } from './idGenerator';
 var idGenerator = new IdGenerator(require('crypto'));
 
 class User {
+  private _sid: string;
+  private _pid: string;
+  private _username: string;
+  private _active: boolean;
+  private static _nextUsernumber: number = 1;
+  
   constructor() {
     this._sid = idGenerator.generate();
     this._pid = idGenerator.generate();
@@ -17,21 +20,18 @@ class User {
   get pid() { return this._pid; }
 
   get username() { return this._username; }
-  set username(username) { this._username = username; }
+  set username(username: string) { this._username = username; }
 
   get active() { return this._active; }
-  set active(active) { this._active = active; }
+  set active(active: boolean) { this._active = active; }
 
   get public() { return { pid: this.pid, username: this.username, active: this.active }; }
 
   static getNextUsername() {
-    if (!this._nextUsernumber)
-      this._nextUsernumber = 1;
-
     return `guest${this._nextUsernumber++}`;
   }
 
-  static isValidUsername(username, users) {
+  static isValidUsername(username: string, users: UserCollection) {
     var regex = /^\w{2,12}$/;
     if (!regex.test(username))
       return false;
@@ -46,11 +46,13 @@ class User {
 }
 
 class UserCollection {
+  private _users: { [id: string]: User };
+  
   constructor () {
     this._users = {};
   }
 
-  getAll(inactive) {
+  getAll(inactive: boolean = false) {
     var result = {};
     Object.keys(this._users).forEach(id => {
       var user = this._users[id];
@@ -60,53 +62,53 @@ class UserCollection {
     return result;
   }
 
-  addUser(id, user) {
+  addUser(id: string, user: User) {
     if (!this._users[id])
       this._users[id] = user;
     else
       throw `User with id ${id} already in userCollection.`;
   }
 
-  removeUser(id) {
+  removeUser(id: string) {
     if (this._users[id])
       delete this._users[id];
     else
       throw `User with id ${id} not in userCollection.`;
   }
 
-  changeId(sid, id, activate) {
+  changeId(sid: string, id: string, activate: boolean = false) {
     var user = this.getUserBySid(sid);
-    this._users[id] = this._users[user.id];
-    delete this._users[user.id];
+    this._users[id] = this._users[user[0]];
+    delete this._users[user[0]];
 
     if (activate)
       this._users[id].active = true;
   }
 
-  getUserById(id) {
+  getUserById(id: string) {
     return this._users[id];
   }
 
-  getUserByPid(pid) {
+  getUserByPid(pid: string) : [string, User] {
       var ids = Object.keys(this._users);
       for (var i = 0; i < ids.length; i++) {
         var id = ids[i];
         if (this._users[id].pid === pid)
-          return { id, user: this._users[id] };
+          return [id, this._users[id]];
       }
-      return undefined;
+      return null;
   }
 
-  getUserBySid(sid) {
+  getUserBySid(sid: string) : [string, User] {
       var ids = Object.keys(this._users);
       for (var i = 0; i < ids.length; i++) {
         var id = ids[i];
         if (this._users[id].sid === sid) {
-          return { id, user: this._users[id] };
+          return [id, this._users[id]];
         }
       }
-      return undefined;
+      return null;
   }
 }
 
-module.exports = { User, UserCollection };
+export { User, UserCollection };

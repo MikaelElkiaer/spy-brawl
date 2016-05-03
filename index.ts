@@ -3,8 +3,7 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-var User = require('./model/user').User;
-var UserCollection = require('./model/user').UserCollection;
+import { User, UserCollection } from './model/user';
 var RoomCollection = require('./model/room').RoomCollection;
 
 // Setup of server and routes

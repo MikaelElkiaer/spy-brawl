@@ -1,6 +1,6 @@
-var User = require('../model/user').User;
+import { User, UserCollection } from '../model/user';
 
-function handle(io, socket, users, rooms) {
+function handle(io, socket, users: UserCollection, rooms) {
   socket.broadcast.emit('user:connect', users.getUserById(socket.id).public);
 
   socket.on('conn', (data, callback) => {
@@ -18,7 +18,7 @@ function handle(io, socket, users, rooms) {
     socket.broadcast.emit('user:disconnect', user.public);
   });
 
-  socket.on('home', (data, callback) => {
+  socket.on('home', (data, callback: (data?: any, error?: string) => any) => {
     callback({ users: users.getAll() });
   });
 

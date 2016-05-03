@@ -1,5 +1,5 @@
-var Room = require('../model/room').Room;
-var IdGenerator = require('../model/idGenerator');
+import { Room } from '../model/room';
+import { IdGenerator } from '../model/idGenerator';
 var idGenerator = new IdGenerator(require('crypto'));
 
 function handle(io, socket, users, rooms) {
