@@ -6,6 +6,7 @@
   "main": "index.js",
   "version": "0.0.1",
   "scripts": {
+    "build": "ntsc",
     "start": "gulp server & gulp watcher",
     "test": "jshint ./"
   },
