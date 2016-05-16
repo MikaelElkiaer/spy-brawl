@@ -5,7 +5,8 @@
         "noImplicitAny": false,
         "sourceMap": true
     },
-    "exclude": [
-        "node_modules"
+    "filesGlob": [
+        "index.ts",
+        "socketHandlers/*.ts"
     ]
 }
