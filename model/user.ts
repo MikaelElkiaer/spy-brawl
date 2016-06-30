@@ -1,5 +1,3 @@
-/// <reference path="../node.d.ts" />
-
 import { IdGenerator } from './idGenerator';
 var idGenerator = new IdGenerator(require('crypto'));
 

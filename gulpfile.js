@@ -1,18 +1,33 @@
 var gulp = require('gulp'),
-    livereload = require('gulp-livereload'),
-    server = require( 'gulp-develop-server' );
+  browserSync = require('browser-sync'),
+  spawn = require('child_process').spawn,
+  node;
 
-gulp.task('watcher', cb => {
-  livereload.listen();
-  gulp.watch(['public/**/*', '!public/views/**/*.jade'], e => {
-    livereload.changed(e);
+gulp.task('server', cb => {
+  if (node)
+    node.kill();
+  node = spawn('node', ['index.js'], {stdio: 'inherit'});
+  node.on('close', function (code) {
+    if (code === 8)
+      gulp.log('Error detected, waiting for changes...');
   });
-  gulp.watch('public/views/**/*.jade', e => livereload.reload());
   cb();
 });
 
-gulp.task('server', () => {
-  server.listen( { path: './index.js' } );
+gulp.task('browser-sync', ['server'], function() {
+	browserSync.init(null, {
+		proxy: "http://localhost:5000",
+        files: ["public/**/*.*"],
+        port: 7000,
+        ws: true
+	});
+});
 
-  return gulp.watch( [ './index.js', './model/**/*.js', './socketHandlers/**/*.js' ], server.restart );
+gulp.task('default', ['browser-sync', 'server'], () => {
+  return gulp.watch(['./index.js'], ['server']);
+});
+
+process.on('exit', () => {
+    if (node)
+      node.kill();
 });

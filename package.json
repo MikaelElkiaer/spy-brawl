@@ -7,8 +7,10 @@
   "version": "0.0.1",
   "scripts": {
     "build": "tsc && tsc --rootDir ./model && tsc --rootDir ./public",
-    "start": "gulp server & gulp watcher",
-    "test": "jshint ./"
+    "build:w": "tsc -w && tsc -w --rootDir ./model && tsc --rootDir ./public",
+    "start": "gulp & npm run build:w",
+    "test": "jshint ./",
+    "postinstall": "typings install"
   },
   "dependencies": {
     "angular": "^1.5.0",
@@ -28,10 +30,7 @@
     "timer-stopwatch": "^0.2.0"
   },
   "devDependencies": {
-    "connect-livereload": "^0.5.4",
-    "gulp": "^3.9.0",
-    "gulp-develop-server": "0.5.1",
-    "gulp-livereload": "^3.8.1",
-    "jshint": "^2.9.1"
+    "browser-sync": "^2.13.0",
+    "gulp": "^3.9.0"
   }
 }
