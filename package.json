@@ -6,7 +6,7 @@
   "main": "index.js",
   "version": "0.0.1",
   "scripts": {
-    "build": "ntsc && ntsc --rootDir ./model && ntsc --rootDir ./public",
+    "build": "tsc && tsc --rootDir ./model && tsc --rootDir ./public",
     "start": "gulp server & gulp watcher",
     "test": "jshint ./"
   },
