@@ -9,7 +9,6 @@
     "build": "tsc && tsc --rootDir ./model && tsc --rootDir ./public",
     "build:w": "tsc -w && tsc -w --rootDir ./model && tsc --rootDir ./public",
     "start": "gulp & npm run build:w",
-    "test": "jshint ./",
     "postinstall": "typings install"
   },
   "dependencies": {
